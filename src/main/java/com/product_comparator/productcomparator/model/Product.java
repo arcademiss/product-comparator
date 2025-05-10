@@ -104,4 +104,19 @@ public class Product {
     public String getStore() {
         return store;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId='" + productId + '\'' +
+                ", productName='" + productName + '\'' +
+                ", productCategory='" + productCategory + '\'' +
+                ", productBrand='" + productBrand + '\'' +
+                ", packageQuantity=" + packageQuantity +
+                ", packageUnit='" + packageUnit + '\'' +
+                ", productPrice=" + productPrice +
+                ", currency='" + currency + '\'' +
+                ", store='" + store + '\'' +
+                '}';
+    }
 }
