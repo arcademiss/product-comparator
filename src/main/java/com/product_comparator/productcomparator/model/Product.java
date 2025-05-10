@@ -16,12 +16,13 @@ public class Product {
     private String packageUnit;
     private double productPrice;
     private String currency;
+    private String store;
 
     public Product() {
     }
 
     public Product(String productId, String productName, String productCategory, String productBrand,
-                   double packageQuantity, String packageUnit, double productPrice, String currency) {
+                   double packageQuantity, String packageUnit, double productPrice, String currency, String store) {
         this.productId = productId;
         this.productName = productName;
         this.productCategory = productCategory;
@@ -30,6 +31,7 @@ public class Product {
         this.packageUnit = packageUnit;
         this.productPrice = productPrice;
         this.currency = currency;
+        this.store = store;
     }
 
     public String getProductId() {
@@ -94,5 +96,13 @@ public class Product {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public void setStore(String store) {
+        this.store = store;
+    }
+
+    public String getStore() {
+        return store;
     }
 }

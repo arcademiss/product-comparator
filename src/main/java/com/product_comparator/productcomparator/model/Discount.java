@@ -1,11 +1,10 @@
 package com.product_comparator.productcomparator.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+
 import java.time.LocalDate;
-@Entity
+
 public class Discount {
-    @Id
+
     private String productId;
     private String productName;
     private String brand;
@@ -17,12 +16,16 @@ public class Discount {
     private int percentage;
 
 
+    private String store;
+
+
     // constructors
     public Discount() {
     }
 
+
     public Discount(String productId, String productName, String brand, double packageQuantity, String packageUnit,
-                    String productCategory, LocalDate fromDate, LocalDate toDate, int percentage) {
+                    String productCategory, LocalDate fromDate, LocalDate toDate, int percentage, String store) {
         this.productId = productId;
         this.productName = productName;
         this.brand = brand;
@@ -32,12 +35,20 @@ public class Discount {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.percentage = percentage;
+        this.store = store;
     }
 
     // defined methods
 
 
     //setters and getters
+    public String getStore() {
+        return store;
+    }
+
+    public void setStore(String store) {
+        this.store = store;
+    }
 
     public String getProductId() {
         return productId;

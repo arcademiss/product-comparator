@@ -1,23 +1,27 @@
 package com.product_comparator.productcomparator.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+
+
+
+
 import java.time.LocalDate;
 
-@Entity
+
 public class PriceHistory {
-    @Id
-    private String productId;
-    private LocalDate date;
+
+     private String productId;
+     private LocalDate date;
     private double price;
+    private String store;
 
     public PriceHistory() {
     }
 
-    public PriceHistory(String productId, LocalDate date, double price) {
+    public PriceHistory(String productId, LocalDate date, double price,  String store) {
         this.productId = productId;
         this.date = date;
         this.price = price;
+        this.store = store;
     }
 
     public String getProductId() {
@@ -43,4 +47,13 @@ public class PriceHistory {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    public String getStore() {
+        return store;
+    }
+
+    public void setStore(String store) {
+        this.store = store;
+    }
 }
+
