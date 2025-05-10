@@ -8,10 +8,15 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-public class HelloController {
+public class ProductPriceController {
 
     @GetMapping("/hello")
     public Map<String, String> sayHello(){
         return Collections.singletonMap("hello", "world");
+    }
+
+    @GetMapping("/discounts")
+    public void bestDiscounts(){
+
     }
 }
