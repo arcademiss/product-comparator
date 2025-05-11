@@ -1,14 +1,13 @@
 package com.product_comparator.productcomparator.service;
 
-import com.product_comparator.productcomparator.model.Discount;
-import com.product_comparator.productcomparator.model.Product;
+import com.product_comparator.productcomparator.entity.Discount;
+import com.product_comparator.productcomparator.entity.Product;
 import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
 
 @Service
 public class InMemoryDataService {

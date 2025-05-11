@@ -1,8 +1,8 @@
 package com.product_comparator.productcomparator.util;
 
 import com.opencsv.CSVReader;
-import com.product_comparator.productcomparator.model.Discount;
-import com.product_comparator.productcomparator.model.Product;
+import com.product_comparator.productcomparator.entity.Discount;
+import com.product_comparator.productcomparator.entity.Product;
 import com.product_comparator.productcomparator.service.InMemoryDataService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +49,7 @@ public class DataLoader {
 
 
 //        inMemoryDataService.printLists();
-        System.out.println(inMemoryDataService.getActiveDiscounts(LocalDate.now()));
+
 
 
     }
@@ -74,10 +74,8 @@ public class DataLoader {
             while((nextLine = csvReader.readNext()) != null){
                 if(Arrays.toString(nextLine).contains("P")){ //Checks if the line is a Discount and not a header
                     splitString = nextLine[0].split(";");
-                    Discount discount = new Discount(splitString[0], splitString[1], splitString[2],
-                            Double.parseDouble(splitString[3]),splitString[4], splitString[5],
-                            LocalDate.parse(splitString[6]), LocalDate.parse(splitString[7]),
-                            Integer.parseInt(splitString[8]), store.split("_")[0]);
+                    Discount discount = Discount.builder().build();
+
 
 
                     discounts.add(discount);
@@ -97,9 +95,7 @@ public class DataLoader {
             while((nextLine = csvReader.readNext()) != null){
                 if(Arrays.toString(nextLine).contains("P")){ //Checks if the line is a Product and not a header
                     splitString = nextLine[0].split(";");
-                    Product product = new Product(splitString[0], splitString[1], splitString[2], splitString[3],
-                             Double.parseDouble(splitString[4]), splitString[5], Double.parseDouble(splitString[6]),
-                            splitString[7], store.split("_")[0]);
+                    Product product = Product.builder().build();
 
                     product.setDate(date);
 
