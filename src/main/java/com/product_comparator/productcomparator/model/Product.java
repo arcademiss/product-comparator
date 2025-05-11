@@ -1,8 +1,7 @@
 package com.product_comparator.productcomparator.model;
 
 
-
-
+import java.time.LocalDate;
 
 public class Product {
 
@@ -16,6 +15,9 @@ public class Product {
     private double productPrice;
     private String currency;
     private String store;
+
+
+    private LocalDate date;
 
     public Product() {
     }
@@ -105,6 +107,13 @@ public class Product {
         return store;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
     @Override
     public String toString() {
         return "Product{" +
@@ -117,6 +126,7 @@ public class Product {
                 ", productPrice=" + productPrice +
                 ", currency='" + currency + '\'' +
                 ", store='" + store + '\'' +
+                ", date=" + date + '\'' +
                 '}';
     }
 }
