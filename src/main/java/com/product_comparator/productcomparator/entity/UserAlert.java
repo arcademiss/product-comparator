@@ -1,4 +1,4 @@
-package com.product_comparator.productcomparator.model;
+package com.product_comparator.productcomparator.entity;
 
 
 
