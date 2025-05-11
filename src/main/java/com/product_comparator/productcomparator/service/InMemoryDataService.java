@@ -4,25 +4,40 @@ import com.product_comparator.productcomparator.model.Discount;
 import com.product_comparator.productcomparator.model.Product;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 
 @Service
 public class InMemoryDataService {
-    private List<List<Discount>> discountList = new ArrayList<>();
-    private List<List<Product>> productList = new ArrayList<>();
+    private final LocalDate currentDate = LocalDate.now();
+    private List<Discount> discountList = new ArrayList<>();
+    private List<Product> productList = new ArrayList<>();
 
 
     public void addProducts(List<Product> productList) {
-        this.productList.add(productList);
+        this.productList.addAll(productList);
     }
     public void addDiscounts(List<Discount> discountList) {
-        this.discountList.add(discountList);
+        this.discountList.addAll(discountList);
     }
 
-    public void printLists(){
-        System.out.println(discountList);
-        System.out.println(productList);
+//    public void printLists(){
+//        System.out.println(discountList);
+//        System.out.println(productList);
+//    }
+
+    public List<Discount> getActiveDiscounts(LocalDate date) {
+        return discountList.stream()
+                .filter(d -> (date.isAfter(d.getFromDate())) && date.isBefore(d.getToDate()))
+                .toList();
+        /*
+           Should use current date here, but for simplicity of testing and avoiding changing the dates in the original
+           datasets a date parameter is required in the POST request.
+         */
+
     }
+
 }

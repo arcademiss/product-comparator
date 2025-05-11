@@ -12,7 +12,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
 
-import java.io.FileReader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -48,6 +48,9 @@ public class DataLoader {
         }
 
 
+//        inMemoryDataService.printLists();
+        System.out.println(inMemoryDataService.getActiveDiscounts(LocalDate.now()));
+
 
     }
 
@@ -58,16 +61,13 @@ public class DataLoader {
     }
 
     private List<Discount> getDiscountList(Resource discountResource) throws IOException {
-        String dateString = Objects.requireNonNull(discountResource.getFilename()).
-                split("_")[2].split("\\.")[0]; /*  kaufland_discounts_2025-05-01.csv split on _ first
-                                                                get 2025-05-01.csv and split on . to retrieve date
-                                                            */
-        LocalDate localDate = LocalDate.parse(dateString);
-        return loadDiscounts(discountResource.getInputStream(), discountResource.getFilename(),
-                localDate);
+
+
+        return loadDiscounts(discountResource.getInputStream(), discountResource.getFilename()
+                );
     }
 
-    private List<Discount> loadDiscounts(InputStream filename, String store, LocalDate localDate) throws IOException {
+    private List<Discount> loadDiscounts(InputStream filename, String store) throws IOException {
         List<Discount> discounts = new ArrayList<>();
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(filename))){
             String[] nextLine, splitString;
