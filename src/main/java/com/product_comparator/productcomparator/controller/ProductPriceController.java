@@ -32,7 +32,7 @@ public class ProductPriceController {
         List<Discount> currentDiscounts = discountRepository
                 .findByFromDateLessThanEqualAndToDateGreaterThanEqual(LocalDate.parse("2025-05-03"), LocalDate.parse("2025-05-03"));
 
-        // Optional: sort by percentage descending
+
         currentDiscounts.sort(Comparator.comparing(Discount::getPercentage).reversed());
 
         return currentDiscounts;
