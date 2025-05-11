@@ -1,10 +1,7 @@
 package com.product_comparator.productcomparator.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +14,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Builder
-
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"productId", "store", "fromDate"})
+)
 public class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +34,14 @@ public class Discount {
     private int percentage;
     private String store;
 
-
+    public void normalizeUnits(){
+        if(packageUnit.equals("g")){
+            packageUnitSI = "kg";
+            packageQuantitySI = packageQuantity/1000.00;
+        }else {
+            packageUnitSI = packageUnit;
+            packageQuantitySI = packageQuantity;
+        }
+    }
 
 }
