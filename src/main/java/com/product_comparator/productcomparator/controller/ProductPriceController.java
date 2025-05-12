@@ -31,6 +31,10 @@ public class ProductPriceController {
     }
 
 
+    @PostMapping("/basket/optimize")
+    public ResponseEntity<List<DiscountDtoOutput>> optimizeBasket(){
+        return null;
+    }
 
 
     }
