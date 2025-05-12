@@ -14,5 +14,8 @@ import java.util.List;
 public interface DiscountRepository extends JpaRepository<Discount,Integer> {
     boolean existsByProductIdAndStoreAndFromDate(String productId, String store, LocalDate fromDate);
     List<Discount> findByFromDateLessThanEqualAndToDateGreaterThanEqual(LocalDate fromDate, LocalDate toDate);
+    List<Discount> findByProductIdAndFromDateLessThanEqualAndToDateGreaterThanEqual(
+            String productId, LocalDate fromDate, LocalDate toDate
+    );
 }
 
