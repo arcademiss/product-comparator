@@ -13,6 +13,10 @@ import java.util.List;
 public class OptimizedShoppingBasketService {
     public OptimizedShoppingBasketOutputDto getOptimizedBasket(List<BasketItemInputDto> items, LocalDate date) {
         // TODO Get data from database for products and discounts
+//        for (BasketItemInputDto item : items) {
+//
+//
+//        }
         // TODO Create discounted items
         // TODO Optimize the shopping basket
         // TODO Create object for return

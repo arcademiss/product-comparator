@@ -30,9 +30,7 @@ public class Product {
     private String productCategory;
     private String productBrand;
     private double packageQuantity;
-    private double packageQuantitySI;
     private String packageUnit;
-    private String packageUnitSI;
     private double productPrice;
     private String currency;
     private String store;
@@ -40,14 +38,22 @@ public class Product {
 
 
 
-    public void normalizeUnits(){
-        if(packageUnit.equals("g")){
-            packageUnitSI = "kg";
-            packageQuantitySI = packageQuantity/1000.00;
-        }else {
-            packageUnitSI = packageUnit;
-            packageQuantitySI = packageQuantity;
-        }
+    @Transient
+    public double getNormalizedQuantity() {
+        return switch (packageUnit.toLowerCase()) {
+            case "g", "ml" -> packageQuantity / 1000.0;
+            default -> packageQuantity;
+        };
+    }
+
+    // Derived (not persisted) method for SI unit
+    @Transient
+    public String getNormalizedUnit() {
+        return switch (packageUnit.toLowerCase()) {
+            case "g" -> "kg";
+            case "ml" -> "l";
+            default -> packageUnit;
+        };
     }
 
 

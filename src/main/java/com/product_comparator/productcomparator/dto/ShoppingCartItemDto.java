@@ -1,5 +1,6 @@
 package com.product_comparator.productcomparator.dto;
 
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,21 +16,26 @@ import java.util.Objects;
 public class ShoppingCartItemDto {
    private String productName;
    private double quantity;
-   private double quantitySI;
    private  String unit;
-   private  String unitSI;
    private  BigDecimal unitPrice;
    private  BigDecimal totalPrice;
 
-    public void normalizeUnits(){
-        if(Objects.equals(unit, "g")) {
-            unitSI="kg";
-            quantitySI=quantity/1000;
+    @Transient
+    public double getNormalizedQuantity() {
+        return switch (unit.toLowerCase()) {
+            case "g", "ml" -> quantity / 1000.0;
+            default -> quantity;
+        };
+    }
 
-        }else {
-            unitSI=unit;
-            quantitySI=quantity;
-        }
+    // Derived (not persisted) method for SI unit
+    @Transient
+    public String getNormalizedUnit() {
+        return switch (unit.toLowerCase()) {
+            case "g" -> "kg";
+            case "ml" -> "l";
+            default -> unit;
+        };
     }
 
 }

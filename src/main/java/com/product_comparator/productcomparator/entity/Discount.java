@@ -25,23 +25,29 @@ public class Discount {
     private String productName;
     private String brand;
     private double packageQuantity;
-    private double packageQuantitySI;
     private String packageUnit;
-    private String packageUnitSI;
     private String productCategory;
     private LocalDate fromDate;
     private LocalDate toDate;
     private int percentage;
     private String store;
 
-    public void normalizeUnits(){
-        if(packageUnit.equals("g")){
-            packageUnitSI = "kg";
-            packageQuantitySI = packageQuantity/1000.00;
-        }else {
-            packageUnitSI = packageUnit;
-            packageQuantitySI = packageQuantity;
-        }
+    @Transient
+    public double getNormalizedQuantity() {
+        return switch (packageUnit.toLowerCase()) {
+            case "g", "ml" -> packageQuantity / 1000.0;
+            default -> packageQuantity;
+        };
+    }
+
+    // Derived (not persisted) method for SI unit
+    @Transient
+    public String getNormalizedUnit() {
+        return switch (packageUnit.toLowerCase()) {
+            case "g" -> "kg";
+            case "ml" -> "l";
+            default -> packageUnit;
+        };
     }
 
 }
