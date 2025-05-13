@@ -20,7 +20,7 @@ public class ShoppingCartItemDto {
    private  BigDecimal unitPrice;
    private  BigDecimal totalPrice;
 
-    @Transient
+
     public double getNormalizedQuantity() {
         return switch (unit.toLowerCase()) {
             case "g", "ml" -> quantity / 1000.0;
@@ -28,8 +28,7 @@ public class ShoppingCartItemDto {
         };
     }
 
-    // Derived (not persisted) method for SI unit
-    @Transient
+
     public String getNormalizedUnit() {
         return switch (unit.toLowerCase()) {
             case "g" -> "kg";

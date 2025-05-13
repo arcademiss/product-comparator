@@ -1,44 +1,26 @@
-package com.product_comparator.productcomparator.entity;
+package com.product_comparator.productcomparator.dto;
 
-
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.Objects;
+import java.math.BigDecimal;
 
 @Data
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"productId", "store", "date"})
-)
-public class Product {
-
-
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
-    private String productId;
+public class DiscountedProductDto {
     private String productName;
     private String productCategory;
     private String productBrand;
     private double packageQuantity;
     private String packageUnit;
-    private double productPrice;
-    private String currency;
+    private BigDecimal productPrice;
     private String store;
-    private LocalDate date;
 
 
-
-    @Transient
     public double getNormalizedQuantity() {
         return switch (packageUnit.toLowerCase()) {
             case "g", "ml" -> packageQuantity / 1000.0;
@@ -47,7 +29,6 @@ public class Product {
     }
 
 
-    @Transient
     public String getNormalizedUnit() {
         return switch (packageUnit.toLowerCase()) {
             case "g" -> "kg";
@@ -55,8 +36,4 @@ public class Product {
             default -> packageUnit;
         };
     }
-
-
-
-
 }

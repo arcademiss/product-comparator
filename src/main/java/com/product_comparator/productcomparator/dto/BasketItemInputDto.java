@@ -17,7 +17,7 @@ public class BasketItemInputDto {
     private double quantity;
     private String unit;
 
-    @Transient
+
     public double getNormalizedQuantity() {
         return switch (unit.toLowerCase()) {
             case "g", "ml" -> quantity / 1000.0;
@@ -25,8 +25,7 @@ public class BasketItemInputDto {
         };
     }
 
-    // Derived (not persisted) method for SI unit
-    @Transient
+
     public String getNormalizedUnit() {
         return switch (unit.toLowerCase()) {
             case "g" -> "kg";
