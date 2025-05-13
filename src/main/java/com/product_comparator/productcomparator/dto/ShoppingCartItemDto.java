@@ -13,13 +13,13 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShoppingCartItemDto {
-    String productName;
-    double quantity;
-    double quantitySI;
-    String unit;
-    String unitSI;
-    BigDecimal unitPrice;
-    BigDecimal totalPrice;
+   private String productName;
+   private double quantity;
+   private double quantitySI;
+   private  String unit;
+   private  String unitSI;
+   private  BigDecimal unitPrice;
+   private  BigDecimal totalPrice;
 
     public void normalizeUnits(){
         if(Objects.equals(unit, "g")) {

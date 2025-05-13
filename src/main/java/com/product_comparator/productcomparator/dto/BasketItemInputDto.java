@@ -12,11 +12,11 @@ import java.util.Objects;
 @NoArgsConstructor
 @Builder
 public class BasketItemInputDto {
-    String productName;
-    double quantity;
-    double quantitySI;
-    String unit;
-    String unitSI;
+    private String productName;
+    private double quantity;
+    private double quantitySI;
+    private String unit;
+    private String unitSI;
 
     public void normalizeUnits(){
         if(Objects.equals(unit, "g")) {
