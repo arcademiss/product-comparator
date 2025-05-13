@@ -11,4 +11,5 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     boolean existsByProductIdAndStoreAndDate(String productId, String store, LocalDate date);
     List<Product> findByProductName(String name);
+    List<Product> findByProductNameContainingIgnoreCase(String name);
 }
