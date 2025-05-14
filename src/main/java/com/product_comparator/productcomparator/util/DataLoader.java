@@ -107,9 +107,6 @@ public class DataLoader {
                             .percentage(Integer.parseInt(splitString[8]))
                             .store(store.split("_")[0])
                             .build();
-
-
-                    discount.normalizeUnits();
                     discounts.add(discount);
 
                 }
@@ -139,7 +136,6 @@ public class DataLoader {
                             .currency(splitString[7])
                             .store(store.split("_")[0])
                             .build();
-                    product.normalizeUnits();
 
                     product.setDate(date);
 

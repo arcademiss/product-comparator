@@ -9,6 +9,6 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface DiscountMapper {
     DiscountDtoOutput discountToDiscountDtoOutput(Discount discount);
-    Discount discountDtoOutputToDiscount(DiscountDtoOutput discountDtoOutput);
+
 
 }
