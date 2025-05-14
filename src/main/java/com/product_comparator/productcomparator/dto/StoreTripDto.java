@@ -17,4 +17,10 @@ public class StoreTripDto {
     List<ShoppingCartItemDto> items;
     BigDecimal subTotal;
     BigDecimal savings;
+
+    public void updateTrip(ShoppingCartItemDto item, BigDecimal subTotal, BigDecimal savings) {
+        this.items.add(item);
+        this.subTotal = this.subTotal.add(subTotal);
+        this.savings = this.savings.add(savings);
+    }
 }

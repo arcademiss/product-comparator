@@ -1,9 +1,6 @@
 package com.product_comparator.productcomparator.service;
 
-import com.product_comparator.productcomparator.dto.BasketItemInputDto;
-import com.product_comparator.productcomparator.dto.DiscountDtoOutput;
-import com.product_comparator.productcomparator.dto.DiscountedProductDto;
-import com.product_comparator.productcomparator.dto.OptimizedShoppingBasketOutputDto;
+import com.product_comparator.productcomparator.dto.*;
 import com.product_comparator.productcomparator.entity.Discount;
 import com.product_comparator.productcomparator.entity.Product;
 import com.product_comparator.productcomparator.mapper.ProductMapper;
@@ -14,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +23,10 @@ public class OptimizedShoppingBasketService {
     public OptimizedShoppingBasketOutputDto getOptimizedBasket(List<BasketItemInputDto> items, LocalDate date) {
         //  Get data from database for products and discounts
         //  Create discounted items
-        List<DiscountedProductDto> discountedProducts = new ArrayList<>();
+
+        Map<String, StoreTripDto> storeTripMap = new HashMap<>();
         for (BasketItemInputDto item : items) {
+
             List<Product> products = productRepository.findByProductNameContainingIgnoreCase(item.getProductName());
 
             if (products.isEmpty()) {
@@ -38,7 +35,9 @@ public class OptimizedShoppingBasketService {
 
             }
 
+            List<DiscountedProductDto> discountedProducts= new ArrayList<>();
             for (Product product : products) {
+
                 DiscountedProductDto discountedProduct = productMapper.productToDiscountedProductDto(product);
                 Discount disc = discountRepository
                     .findByProductIdAndFromDateLessThanEqualAndToDateGreaterThanEqualAndStore(
@@ -52,20 +51,58 @@ public class OptimizedShoppingBasketService {
                 // if disc != null first option else second
                 double discountPercentage = disc != null ? disc.getPercentage()/100.00 : 0;
 
+
                 discountedProduct.setDiscountedPrice(
                         currentPrice.subtract(currentPrice.multiply(BigDecimal.valueOf(discountPercentage)))
                 );
 
+
                 discountedProducts.add(discountedProduct);
+
+
+            }
+            discountedProducts.sort(Comparator.comparing(DiscountedProductDto::getDiscountedPrice));
+            DiscountedProductDto cheapestProduct = discountedProducts.getFirst();
+
+            ShoppingCartItemDto shoppingCartItemDto = ShoppingCartItemDto.builder()
+                    .productName(cheapestProduct.getProductName())
+                    .quantity(item.getQuantity())
+                    .unit(cheapestProduct.getNormalizedUnit())
+                    .unitPrice(cheapestProduct.getDiscountedPrice())
+                    .totalPrice(BigDecimal.valueOf(item.getQuantity()).multiply(cheapestProduct.getDiscountedPrice()))
+                    .build();
+
+            storeTripMap
+                    .computeIfAbsent(cheapestProduct.getStore(), k -> new StoreTripDto())
+                    .setStoreName(cheapestProduct.getStore());
+
+            if (storeTripMap.get(cheapestProduct.getStore()).getItems() == null) {
+                storeTripMap.get(cheapestProduct.getStore()).setItems(new ArrayList<>());
+                storeTripMap.get(cheapestProduct.getStore()).setSavings(BigDecimal.ZERO);
+                storeTripMap.get(cheapestProduct.getStore()).setSubTotal(BigDecimal.ZERO);
             }
 
+            storeTripMap.get(cheapestProduct.getStore())
+                    .updateTrip(shoppingCartItemDto, shoppingCartItemDto.getTotalPrice(),
+                            cheapestProduct.getProductPrice().subtract(cheapestProduct.getDiscountedPrice()));
+
+
+
         }
+
+        OptimizedShoppingBasketOutputDto output = OptimizedShoppingBasketOutputDto.builder()
+                .stores(new ArrayList<>())
+                .totalCost(BigDecimal.ZERO)
+                .totalSavings(BigDecimal.ZERO)
+                .build();
+
+        output.updateBasket(storeTripMap);
 
         // TODO Optimize the shopping basket
         // TODO Create object for return
 
 
-        return optimizeBasket(discountedProducts);
+        return output;
     }
 
     private OptimizedShoppingBasketOutputDto optimizeBasket(List<DiscountedProductDto> discountedProducts) {
