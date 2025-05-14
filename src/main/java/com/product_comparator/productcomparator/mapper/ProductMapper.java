@@ -7,10 +7,10 @@ import org.mapstruct.Mapper;
 
 
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ProductMapper {
     DiscountedProductDto productToDiscountedProductDto(Product product);
-    Product productToDiscountedProductDto(DiscountedProductDto discountedProductDto);
+
 
 
 }

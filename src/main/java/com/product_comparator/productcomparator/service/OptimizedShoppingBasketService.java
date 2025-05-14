@@ -50,9 +50,9 @@ public class OptimizedShoppingBasketService {
 
                 BigDecimal currentPrice = discountedProduct.getProductPrice();
                 // if disc != null first option else second
-                int discountPercentage = disc != null ? disc.getPercentage() : 0;
+                double discountPercentage = disc != null ? disc.getPercentage()/100.00 : 0;
 
-                discountedProduct.setProductPrice(
+                discountedProduct.setDiscountedPrice(
                         currentPrice.subtract(currentPrice.multiply(BigDecimal.valueOf(discountPercentage)))
                 );
 

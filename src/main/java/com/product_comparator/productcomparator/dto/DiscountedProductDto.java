@@ -18,6 +18,7 @@ public class DiscountedProductDto {
     private double packageQuantity;
     private String packageUnit;
     private BigDecimal productPrice;
+    private BigDecimal discountedPrice;
     private String store;
 
 
