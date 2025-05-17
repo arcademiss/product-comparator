@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class NewDiscountDto {
     private String storeName;
     private String productName;
-    private BigDecimal discount;
+    private int discount;
     private BigDecimal oldPrice;
     private BigDecimal newPrice;
     private LocalDate fromDate;

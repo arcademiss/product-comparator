@@ -20,5 +20,8 @@ public interface DiscountRepository extends JpaRepository<Discount,Integer> {
     Discount findByProductIdAndFromDateLessThanEqualAndToDateGreaterThanEqualAndStore(
             String productId, LocalDate fromDate, LocalDate toDate, String store
     );
+
+    List<Discount> findByFromDateIn(List<LocalDate> dates);
+
 }
 
