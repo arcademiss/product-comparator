@@ -76,12 +76,6 @@ public class OptimizedShoppingBasketService {
                     .computeIfAbsent(cheapestProduct.getStore(), k -> new StoreTripDto())
                     .setStoreName(cheapestProduct.getStore());
 
-            if (storeTripMap.get(cheapestProduct.getStore()).getItems() == null) {
-                storeTripMap.get(cheapestProduct.getStore()).setItems(new ArrayList<>());
-                storeTripMap.get(cheapestProduct.getStore()).setSavings(BigDecimal.ZERO);
-                storeTripMap.get(cheapestProduct.getStore()).setSubTotal(BigDecimal.ZERO);
-            }
-
             storeTripMap.get(cheapestProduct.getStore())
                     .updateTrip(shoppingCartItemDto, shoppingCartItemDto.getTotalPrice(),
                             cheapestProduct.getProductPrice().subtract(cheapestProduct.getDiscountedPrice()));
@@ -90,11 +84,7 @@ public class OptimizedShoppingBasketService {
 
         }
 
-        OptimizedShoppingBasketOutputDto output = OptimizedShoppingBasketOutputDto.builder()
-                .stores(new ArrayList<>())
-                .totalCost(BigDecimal.ZERO)
-                .totalSavings(BigDecimal.ZERO)
-                .build();
+        OptimizedShoppingBasketOutputDto output = new OptimizedShoppingBasketOutputDto();
 
         output.updateBasket(storeTripMap);
 
