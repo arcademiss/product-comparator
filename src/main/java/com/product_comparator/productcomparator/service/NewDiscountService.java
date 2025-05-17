@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,9 @@ public class NewDiscountService {
                         .quantity(discount.getNormalizedQuantity())
                         .unit(discount.getNormalizedUnit())
                         .oldPrice(price)
-                        .newPrice(price.multiply(BigDecimal.ONE.subtract(BigDecimal.valueOf(discount.getPercentage()))))
+                        .newPrice(price
+                                .multiply(BigDecimal.ONE.subtract(BigDecimal.valueOf(discount.getPercentage()/100.00)))
+                                .setScale(2, RoundingMode.HALF_UP))
                         .build();
                 newDiscountDtos.add(nD);
             }
