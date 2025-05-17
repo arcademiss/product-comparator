@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,8 +24,8 @@ public class OptimizedShoppingBasketOutputDto {
     public void updateBasket(Map<String, StoreTripDto> storeTripMap) {
         for (String key : storeTripMap.keySet()) {
             stores.add(storeTripMap.get(key));
-            this.totalCost = this.totalCost.add(storeTripMap.get(key).getSubTotal());
-            this.totalSavings = this.totalSavings.add(storeTripMap.get(key).getSavings());
+            this.totalCost = this.totalCost.add(storeTripMap.get(key).getSubTotal()).setScale(2, RoundingMode.HALF_UP);
+            this.totalSavings = this.totalSavings.add(storeTripMap.get(key).getSavings()).setScale(2, RoundingMode.HALF_UP);
         }
     }
 

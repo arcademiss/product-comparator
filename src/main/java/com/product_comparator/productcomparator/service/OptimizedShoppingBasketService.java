@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -25,12 +28,14 @@ public class OptimizedShoppingBasketService {
         //  Create discounted items
 
         Map<String, StoreTripDto> storeTripMap = new HashMap<>();
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
         for (BasketItemInputDto item : items) {
 
             List<Product> products = productRepository.findByProductNameContainingIgnoreCase(item.getProductName());
 
             if (products.isEmpty()) {
-                System.out.println("No product with name " + item.getProductName() + " found"); // Change later with exc
+
                 continue;// move to the next item in the cart
 
             }
@@ -49,7 +54,10 @@ public class OptimizedShoppingBasketService {
 
                 BigDecimal currentPrice = discountedProduct.getProductPrice();
                 // if disc != null first option else second
-                double discountPercentage = disc != null ? disc.getPercentage()/100.00 : 0;
+
+                double discountPercentage = disc != null ? disc.getPercentage()/100.0 : 0;
+
+
 
 
                 discountedProduct.setDiscountedPrice(
@@ -68,8 +76,9 @@ public class OptimizedShoppingBasketService {
                     .productName(cheapestProduct.getProductName())
                     .quantity(item.getQuantity())
                     .unit(cheapestProduct.getNormalizedUnit())
-                    .unitPrice(cheapestProduct.getDiscountedPrice())
-                    .totalPrice(BigDecimal.valueOf(item.getQuantity()).multiply(cheapestProduct.getDiscountedPrice()))
+                    .unitPrice(cheapestProduct.getDiscountedPrice()
+                            .setScale(2, RoundingMode.HALF_UP))
+                    .totalPrice(BigDecimal.valueOf(item.getQuantity()).multiply(cheapestProduct.getDiscountedPrice()).setScale(2, RoundingMode.HALF_UP))
                     .build();
 
             storeTripMap
@@ -88,8 +97,6 @@ public class OptimizedShoppingBasketService {
 
         output.updateBasket(storeTripMap);
 
-        // TODO Optimize the shopping basket
-        // TODO Create object for return
 
 
         return output;

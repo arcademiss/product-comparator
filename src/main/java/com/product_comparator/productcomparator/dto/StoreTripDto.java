@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,8 +25,8 @@ public class StoreTripDto {
 
     public void updateTrip(ShoppingCartItemDto item, BigDecimal subTotal, BigDecimal savings) {
         this.items.add(item);
-        this.subTotal = this.subTotal.add(subTotal);
-        this.savings = this.savings.add(savings);
+        this.subTotal = this.subTotal.add(subTotal).setScale(2, RoundingMode.HALF_UP);
+        this.savings = this.savings.add(savings).setScale(2, RoundingMode.HALF_UP);
     }
 
     public StoreTripDto() {
