@@ -3,6 +3,7 @@ package com.product_comparator.productcomparator.service;
 import com.product_comparator.productcomparator.dto.PriceHistoryPointDto;
 import com.product_comparator.productcomparator.entity.Discount;
 import com.product_comparator.productcomparator.entity.Product;
+import com.product_comparator.productcomparator.exception.product.ProductNotFoundException;
 import com.product_comparator.productcomparator.repository.DiscountRepository;
 import com.product_comparator.productcomparator.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,9 @@ public class PriceHistoryService {
         List<Product> products = productRepository.findByProductName(name);
 
         if (products.isEmpty()) {
-            return Collections.emptyList();
-            // todo raise exception 404
+
+            throw new ProductNotFoundException("Product not found");
+
         }
 
         if(store!=null) {
@@ -50,8 +52,7 @@ public class PriceHistoryService {
         }
 
         if(products.isEmpty()) {
-            return Collections.emptyList();
-            // todo raise exception 404
+            throw new ProductNotFoundException("Product not found");
         }
 
         List<PriceHistoryPointDto> priceHistoryPointDtos = new ArrayList<>();
