@@ -3,11 +3,14 @@ package com.product_comparator.productcomparator.controller;
 import com.product_comparator.productcomparator.dto.BasketItemInputDto;
 import com.product_comparator.productcomparator.dto.DiscountDtoOutput;
 
+import com.product_comparator.productcomparator.dto.NewDiscountDto;
 import com.product_comparator.productcomparator.dto.OptimizedShoppingBasketOutputDto;
 import com.product_comparator.productcomparator.request.BasketRequest;
 import com.product_comparator.productcomparator.service.DiscountService;
 import com.product_comparator.productcomparator.service.OptimizedShoppingBasketService;
+import com.product_comparator.productcomparator.service.NewDiscountService;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +25,7 @@ public class ProductPriceController {
 
     private final DiscountService discountService;
     private final OptimizedShoppingBasketService optimizedShoppingBasketService;
+    private final NewDiscountService newDiscountService;
 
 
 
@@ -37,6 +41,11 @@ public class ProductPriceController {
         List<BasketItemInputDto> items = basketRequest.getItems();
         LocalDate startDate = basketRequest.getStartDate();
         return ResponseEntity.ok(optimizedShoppingBasketService.getOptimizedBasket(items, startDate));
+    }
+
+    @GetMapping("/new-discounts")
+    public ResponseEntity<List<NewDiscountDto>> getNewDiscounts(@RequestParam LocalDate date) {
+        return ResponseEntity.ok(newDiscountService.newDiscounts(date));
     }
 
 
