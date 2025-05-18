@@ -6,6 +6,7 @@ import com.product_comparator.productcomparator.request.BasketRequest;
 import com.product_comparator.productcomparator.service.DiscountService;
 import com.product_comparator.productcomparator.service.OptimizedShoppingBasketService;
 import com.product_comparator.productcomparator.service.NewDiscountService;
+import com.product_comparator.productcomparator.service.PriceHistoryService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ public class ProductPriceController {
     private final DiscountService discountService;
     private final OptimizedShoppingBasketService optimizedShoppingBasketService;
     private final NewDiscountService newDiscountService;
+    private final PriceHistoryService priceHistoryService;
 
 
 
@@ -52,7 +54,7 @@ public class ProductPriceController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String brand
     ) {
-        return null;
+        return ResponseEntity.ok(priceHistoryService.getHistory(productName, store, category, brand));
     }
 
     }
