@@ -6,7 +6,9 @@ import com.product_comparator.productcomparator.entity.Product;
 import com.product_comparator.productcomparator.exception.product.ProductNotFoundException;
 import com.product_comparator.productcomparator.repository.DiscountRepository;
 import com.product_comparator.productcomparator.repository.ProductRepository;
+import com.product_comparator.productcomparator.repository.ProductSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,7 +32,13 @@ public class PriceHistoryService {
             String brand
     ) {
 
-        List<Product> products = productRepository.findByProductName(name);
+        Specification<Product> spec = Specification
+                .where(ProductSpecification.hasName(name))
+                .and(ProductSpecification.hasStore(store))
+                .and(ProductSpecification.hasCategory(category))
+                .and(ProductSpecification.hasBrand(brand));
+
+        List<Product> products = productRepository.findAll(spec);
 
         if (products.isEmpty()) {
 
@@ -38,25 +46,9 @@ public class PriceHistoryService {
 
         }
 
-        if(!store.isBlank()) {
-            products = products.stream()
-                    .filter(product -> store.equalsIgnoreCase(product.getStore()))
-                    .toList();
-        }
-        if(!category.isBlank()) {
-            products = products.stream()
-                    .filter(product -> category.equalsIgnoreCase(product.getProductCategory()))
-                    .toList();
-        }
-        if(!brand.isBlank()) {
-            products = products.stream()
-                    .filter(product -> brand.equalsIgnoreCase(product.getProductBrand()))
-                    .toList();
-        }
 
-        if(products.isEmpty()) {
-            throw new ProductNotFoundException("Product not found");
-        }
+
+
 
         List<PriceHistoryPointDto> priceHistoryPointDtos = new ArrayList<>();
 

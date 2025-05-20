@@ -13,7 +13,7 @@ public class ProductSpecification {
     public static Specification<Product> hasStore(String store) {
         return (root, query, cb) -> store == null || store.isBlank()
                 ? null
-                : cb.equal(cb.lower(root.get("productStore")), store.toLowerCase());
+                : cb.equal(cb.lower(root.get("store")), store.toLowerCase());
     }
 
     public static Specification<Product> hasBrand(String brand) {
