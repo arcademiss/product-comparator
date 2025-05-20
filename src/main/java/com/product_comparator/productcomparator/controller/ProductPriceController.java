@@ -59,5 +59,10 @@ public class ProductPriceController {
         return ResponseEntity.ok(priceHistoryService.getHistory(productName, store, category, brand));
     }
 
+    @GetMapping("/best-buys")
+    public ResponseEntity<List<BestBuyDto>> getBestBuys(LocalDate date) {
+        return null;
+    }
+
     }
 
