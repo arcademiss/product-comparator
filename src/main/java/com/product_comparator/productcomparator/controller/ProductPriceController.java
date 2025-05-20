@@ -50,10 +50,12 @@ public class ProductPriceController {
     @GetMapping("/price-history")
     public ResponseEntity<List<PriceHistoryPointDto>> getPriceHistory(
             @RequestParam String productName,
-            @RequestParam(required = false) String store,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String brand // fa req body
+            @ModelAttribute PriceHistoryFilterRequest filter
     ) {
+        String store = filter.getStore();
+        String category = filter.getCategory();
+        String brand = filter.getBrand();
+
         return ResponseEntity.ok(priceHistoryService.getHistory(productName, store, category, brand));
     }
 
