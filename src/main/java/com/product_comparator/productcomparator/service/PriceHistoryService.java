@@ -38,17 +38,17 @@ public class PriceHistoryService {
 
         }
 
-        if(store!=null) {
+        if(!store.isBlank()) {
             products = products.stream()
                     .filter(product -> store.equalsIgnoreCase(product.getStore()))
                     .toList();
         }
-        if(category!=null) {
+        if(!category.isBlank()) {
             products = products.stream()
                     .filter(product -> category.equalsIgnoreCase(product.getProductCategory()))
                     .toList();
         }
-        if(brand!=null) {
+        if(!brand.isBlank()) {
             products = products.stream()
                     .filter(product -> brand.equalsIgnoreCase(product.getProductBrand()))
                     .toList();

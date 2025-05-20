@@ -52,7 +52,7 @@ public class ProductPriceController {
             @RequestParam String productName,
             @RequestParam(required = false) String store,
             @RequestParam(required = false) String category,
-            @RequestParam(required = false) String brand
+            @RequestParam(required = false) String brand // fa req body
     ) {
         return ResponseEntity.ok(priceHistoryService.getHistory(productName, store, category, brand));
     }
