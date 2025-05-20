@@ -1,6 +1,7 @@
 package com.product_comparator.productcomparator.service;
 
 import com.product_comparator.productcomparator.dto.BestBuyDto;
+import com.product_comparator.productcomparator.entity.Product;
 import com.product_comparator.productcomparator.repository.DiscountRepository;
 import com.product_comparator.productcomparator.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ public class BestBuysService {
     private ProductRepository productRepository;
 
     public List<BestBuyDto> bestBuys(LocalDate date) {
+        List<Product> pds = productRepository.findLowestPricedProducts(date);
         return null;
     }
 }
