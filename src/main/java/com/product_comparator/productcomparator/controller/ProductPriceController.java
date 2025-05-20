@@ -1,14 +1,12 @@
 package com.product_comparator.productcomparator.controller;
 
-import com.product_comparator.productcomparator.dto.BasketItemInputDto;
-import com.product_comparator.productcomparator.dto.DiscountDtoOutput;
+import com.product_comparator.productcomparator.dto.*;
 
-import com.product_comparator.productcomparator.dto.NewDiscountDto;
-import com.product_comparator.productcomparator.dto.OptimizedShoppingBasketOutputDto;
 import com.product_comparator.productcomparator.request.BasketRequest;
 import com.product_comparator.productcomparator.service.DiscountService;
 import com.product_comparator.productcomparator.service.OptimizedShoppingBasketService;
 import com.product_comparator.productcomparator.service.NewDiscountService;
+import com.product_comparator.productcomparator.service.PriceHistoryService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -26,6 +24,7 @@ public class ProductPriceController {
     private final DiscountService discountService;
     private final OptimizedShoppingBasketService optimizedShoppingBasketService;
     private final NewDiscountService newDiscountService;
+    private final PriceHistoryService priceHistoryService;
 
 
 
@@ -48,7 +47,15 @@ public class ProductPriceController {
         return ResponseEntity.ok(newDiscountService.newDiscounts(date));
     }
 
-
+    @GetMapping("/price-history")
+    public ResponseEntity<List<PriceHistoryPointDto>> getPriceHistory(
+            @RequestParam String productName,
+            @RequestParam(required = false) String store,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String brand
+    ) {
+        return ResponseEntity.ok(priceHistoryService.getHistory(productName, store, category, brand));
+    }
 
     }
 
