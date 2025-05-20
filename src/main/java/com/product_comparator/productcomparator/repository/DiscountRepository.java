@@ -24,5 +24,7 @@ public interface DiscountRepository extends JpaRepository<Discount,Integer> {
     List<Discount> findByFromDateIn(List<LocalDate> dates);
 
 
+
+
 }
 
