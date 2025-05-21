@@ -19,4 +19,5 @@ public class BestBuyDto {
     private double quantityNorm;
     private BigDecimal price;
     private BigDecimal pricePerUnit;
+    private String store;
 }

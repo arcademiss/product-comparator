@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -58,7 +59,7 @@ public class ProductPriceController {
     }
 
     @GetMapping("/best-buys")
-    public ResponseEntity<List<BestBuyDto>> getBestBuys(LocalDate date) {
+    public ResponseEntity<Map<String,List<BestBuyDto>>> getBestBuys(LocalDate date) {
         return ResponseEntity.ok(bestBuysService.bestBuys(date));
     }
 
