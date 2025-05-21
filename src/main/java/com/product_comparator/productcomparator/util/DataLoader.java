@@ -105,7 +105,7 @@ public class DataLoader {
                             .fromDate(LocalDate.parse(splitString[6]))
                             .toDate(LocalDate.parse(splitString[7]))
                             .percentage(Integer.parseInt(splitString[8]))
-                            .store(store.split("_")[0])
+                            .store(store.split("_")[0].strip())
                             .build();
                     discounts.add(discount);
 
@@ -134,7 +134,7 @@ public class DataLoader {
                             .packageUnit(splitString[5])
                             .productPrice(Double.parseDouble(splitString[6]))
                             .currency(splitString[7])
-                            .store(store.split("_")[0])
+                            .store(store.split("_")[0].strip())
                             .build();
 
                     product.setDate(date);

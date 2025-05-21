@@ -3,10 +3,7 @@ package com.product_comparator.productcomparator.controller;
 import com.product_comparator.productcomparator.dto.*;
 
 import com.product_comparator.productcomparator.request.BasketRequest;
-import com.product_comparator.productcomparator.service.DiscountService;
-import com.product_comparator.productcomparator.service.OptimizedShoppingBasketService;
-import com.product_comparator.productcomparator.service.NewDiscountService;
-import com.product_comparator.productcomparator.service.PriceHistoryService;
+import com.product_comparator.productcomparator.service.*;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -25,6 +23,7 @@ public class ProductPriceController {
     private final OptimizedShoppingBasketService optimizedShoppingBasketService;
     private final NewDiscountService newDiscountService;
     private final PriceHistoryService priceHistoryService;
+    private final BestBuysService bestBuysService;
 
 
 
@@ -57,6 +56,11 @@ public class ProductPriceController {
         String brand = filter.getBrand();
 
         return ResponseEntity.ok(priceHistoryService.getHistory(productName, store, category, brand));
+    }
+
+    @GetMapping("/best-buys")
+    public ResponseEntity<Map<String,List<BestBuyDto>>> getBestBuys(LocalDate date) {
+        return ResponseEntity.ok(bestBuysService.bestBuys(date));
     }
 
     }

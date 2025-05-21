@@ -26,4 +26,17 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             @Param("productId") String productId,
             @Param("targetDate") LocalDate targetDate
     );
+
+    @Query("""
+    SELECT p
+    FROM Product p
+    WHERE p.date >= :date
+    AND p.productPrice = (
+        SELECT MIN(p2.productPrice)
+        FROM Product p2
+        WHERE p2.productId = p.productId AND p2.date >= :date
+    )
+    ORDER BY p.productPrice
+""")
+    List<Product> findLowestPricedProducts(@Param("date") LocalDate date);
 }
