@@ -41,7 +41,7 @@ public class DataLoader {
     }
 
 
-    @PostConstruct
+    //@PostConstruct
     public void init() throws IOException {
         Resource[] priceResources = resourcePatternResolver.getResources(csvPricesPath);
         for(Resource priceResource : priceResources){

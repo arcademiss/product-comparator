@@ -39,4 +39,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     ORDER BY p.productPrice
 """)
     List<Product> findLowestPricedProducts(@Param("date") LocalDate date);
+
+    Product findTop1ByProductNameAndProductBrandAndStore(String productName, String productBrand, String store);
 }

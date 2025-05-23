@@ -6,9 +6,11 @@ import com.product_comparator.productcomparator.request.BasketRequest;
 import com.product_comparator.productcomparator.service.*;
 import lombok.RequiredArgsConstructor;
 
+import org.mapstruct.control.MappingControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ public class ProductPriceController {
     private final NewDiscountService newDiscountService;
     private final PriceHistoryService priceHistoryService;
     private final BestBuysService bestBuysService;
+    private final UserAlertService userAlertService;
 
 
 
@@ -61,6 +64,19 @@ public class ProductPriceController {
     @GetMapping("/best-buys")
     public ResponseEntity<Map<String,List<BestBuyDto>>> getBestBuys(LocalDate date) {
         return ResponseEntity.ok(bestBuysService.bestBuys(date));
+    }
+
+    @PostMapping("/set-alert")
+    public ResponseEntity<String> addAlert(
+            @RequestBody UserAlertInputDto userAlertInput
+
+    ) {
+        String email = userAlertInput.getUserEmail();
+        String name = userAlertInput.getProductName();
+        String store = userAlertInput.getProductStore();
+        String brand = userAlertInput.getProductBrand();
+        BigDecimal price = userAlertInput.getPriceSetpoint();
+        return ResponseEntity.ok(userAlertService.addUserAlert(email, name, brand, store, price));
     }
 
     }

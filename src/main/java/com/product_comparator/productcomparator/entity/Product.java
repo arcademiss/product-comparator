@@ -2,12 +2,10 @@ package com.product_comparator.productcomparator.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -15,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"productId", "store", "date"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"Id", "store", "date"})
 )
 public class Product {
 
@@ -34,6 +32,9 @@ public class Product {
     private String currency;
     private String store;
     private LocalDate date;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<UserAlert> alerts;
 
 
 
