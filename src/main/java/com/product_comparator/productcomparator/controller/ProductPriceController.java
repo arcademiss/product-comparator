@@ -76,7 +76,7 @@ public class ProductPriceController {
         String store = userAlertInput.getProductStore();
         String brand = userAlertInput.getProductBrand();
         BigDecimal price = userAlertInput.getPriceSetpoint();
-        return ResponseEntity.ok(userAlertService.addUserAlert(email, name, store, brand, price));
+        return ResponseEntity.ok(userAlertService.addUserAlert(email, name, brand, store, price));
     }
 
     }
