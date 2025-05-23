@@ -1,10 +1,7 @@
 package com.product_comparator.productcomparator.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,6 +24,7 @@ public class UserAlert {
     private BigDecimal priceSetpoint;
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @ToString.Exclude
     private Product product;
 
 }
