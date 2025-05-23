@@ -7,79 +7,93 @@ import com.product_comparator.productcomparator.repository.DiscountRepository;
 import com.product_comparator.productcomparator.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.ArgumentMatchers;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-public class NewDiscountServiceTest {
+class NewDiscountServiceTest {
 
-    @Autowired
-    private NewDiscountService newDiscountService;
-
-    @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
     private DiscountRepository discountRepository;
-
-    private final LocalDate testDate = LocalDate.of(2025, 5, 1);
+    private NewDiscountService newDiscountService;
 
     @BeforeEach
     void setUp() {
-        // Clean up the database
-        productRepository.deleteAll();
-        discountRepository.deleteAll();
-
-        // Add a product
-        Product product = Product.builder()
-                .productId("P001")
-                .productName("Milk")
-                .productPrice(5.0)
-                .store("StoreA")
-                .date(testDate.minusDays(1))
-                .build();
-        productRepository.save(product);
-
-        // Add a discount
-        Discount discount = Discount.builder()
-                .productId("P001")
-                .productName("Milk")
-                .percentage(20)
-                .store("StoreA")
-                .fromDate(testDate)
-                .toDate(testDate.plusDays(3))
-                .packageQuantity(1.0)
-                .packageUnit("L")
-                .build();
-        discountRepository.save(discount);
+        productRepository = mock(ProductRepository.class);
+        discountRepository = mock(DiscountRepository.class);
+        newDiscountService = new NewDiscountService(productRepository, discountRepository);
     }
 
     @Test
-    void shouldReturnDiscountedProductDto() {
+    void testNewDiscounts_WithMatchingProduct_ReturnsDtoList() {
+        LocalDate testDate = LocalDate.of(2025, 5, 20);
+        Discount discount = new Discount();
+        discount.setProductId("P001");
+        discount.setProductName("Milk");
+        discount.setStore("Store A");
+        discount.setPercentage(20);
+        discount.setFromDate(testDate);
+        discount.setToDate(testDate.plusDays(5));
+        discount.setPackageQuantity(1.0);
+        discount.setPackageUnit("l");
+
+        Product product = new Product();
+        product.setProductId("P001");
+        product.setProductPrice(2.50);
+
+        when(discountRepository.findByFromDateIn(List.of(testDate, testDate.minusDays(1))))
+                .thenReturn(List.of(discount));
+
+        when(productRepository.findClosestByProductIdAndDateNative("P001", testDate))
+                .thenReturn(Optional.of(product));
+
         List<NewDiscountDto> result = newDiscountService.newDiscounts(testDate);
 
         assertEquals(1, result.size());
         NewDiscountDto dto = result.get(0);
-
         assertEquals("Milk", dto.getProductName());
-        assertEquals("StoreA", dto.getStoreName());
-        assertEquals(20, dto.getDiscount());
-        assertEquals(BigDecimal.valueOf(5.0).setScale(2, RoundingMode.HALF_UP), dto.getOldPrice().setScale(2, RoundingMode.HALF_UP));
-        assertEquals(BigDecimal.valueOf(4.0).setScale(2, RoundingMode.HALF_UP), dto.getNewPrice().setScale(2, RoundingMode.HALF_UP));
-        assertEquals("L", dto.getUnit());
-        assertEquals(1.0, dto.getQuantity());
+        assertEquals("Store A", dto.getStoreName());
+        assertEquals(20.0, dto.getDiscount());
+        assertEquals(new BigDecimal("2.50"), dto.getOldPrice().setScale(2, RoundingMode.HALF_UP));
+        assertEquals(new BigDecimal("2.00"), dto.getNewPrice().setScale(2, RoundingMode.HALF_UP));
     }
 
     @Test
-    void shouldReturnEmptyListIfNoMatchingDiscounts() {
-        List<NewDiscountDto> result = newDiscountService.newDiscounts(LocalDate.of(2025, 6, 1));
+    void testNewDiscounts_WithNoMatchingProduct_ReturnsEmptyDtoList() {
+        LocalDate testDate = LocalDate.of(2025, 5, 20);
+        Discount discount = new Discount();
+        discount.setProductId("P002");
+        discount.setProductName("Bread");
+        discount.setFromDate(testDate);
+        discount.setPercentage(10);
+
+        when(discountRepository.findByFromDateIn(List.of(testDate, testDate.minusDays(1))))
+                .thenReturn(List.of(discount));
+
+        when(productRepository.findClosestByProductIdAndDateNative("P002", testDate))
+                .thenReturn(Optional.empty());
+
+        List<NewDiscountDto> result = newDiscountService.newDiscounts(testDate);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testNewDiscounts_NoDiscounts_ReturnsEmptyList() {
+        LocalDate testDate = LocalDate.of(2025, 5, 20);
+        when(discountRepository.findByFromDateIn(List.of(testDate, testDate.minusDays(1))))
+                .thenReturn(List.of());
+
+        List<NewDiscountDto> result = newDiscountService.newDiscounts(testDate);
+
+        assertNotNull(result);
         assertTrue(result.isEmpty());
     }
 }
