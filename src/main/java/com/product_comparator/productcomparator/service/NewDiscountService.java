@@ -5,6 +5,7 @@ import com.product_comparator.productcomparator.entity.Discount;
 import com.product_comparator.productcomparator.entity.Product;
 import com.product_comparator.productcomparator.repository.DiscountRepository;
 import com.product_comparator.productcomparator.repository.ProductRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-
+@AllArgsConstructor
 public class NewDiscountService {
     @Autowired
     private ProductRepository productRepository;
