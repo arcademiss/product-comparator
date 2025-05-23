@@ -19,15 +19,14 @@ public class UserAlert {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int Id;
     private String userEmail;
-    private String productId;
-    private String productName;
-    private String brand;
-    private String store;
     private LocalDate dateAdded;
     @Column(name = "sent")
     private Boolean sent=false;
     @Column(name = "date_sent")
     private LocalDate dateSent=null;
     private BigDecimal priceSetpoint;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
 }

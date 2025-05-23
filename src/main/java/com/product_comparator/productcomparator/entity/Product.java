@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -34,6 +35,8 @@ public class Product {
     private String currency;
     private String store;
     private LocalDate date;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<UserAlert> alerts;
 
 
 
