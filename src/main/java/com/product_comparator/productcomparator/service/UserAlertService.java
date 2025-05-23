@@ -7,6 +7,7 @@ import com.product_comparator.productcomparator.exception.product.ProductNotFoun
 import com.product_comparator.productcomparator.repository.DiscountRepository;
 import com.product_comparator.productcomparator.repository.ProductRepository;
 import com.product_comparator.productcomparator.repository.UserAlertRepository;
+import com.product_comparator.productcomparator.util.EmailSender;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,6 +25,8 @@ public class UserAlertService {
     UserAlertRepository userAlertRepository;
     @Autowired
     DiscountRepository  discountRepository;
+    @Autowired
+    EmailSender emailSender;
     public String addUserAlert(
             String userEmail,
             String productName,
@@ -65,6 +68,7 @@ public class UserAlertService {
                     : BigDecimal.valueOf(product.getProductPrice());
             if(price.compareTo(userAlert.getPriceSetpoint()) < 0 || price.compareTo(userAlert.getPriceSetpoint()) == 0) {
                 System.out.println("Email sent to: " + userAlert.getUserEmail());
+                //emailSender.sendSimpleMessage("georgeventel97@gmail.com", "testmail", "The product is here");
                 userAlert.setSent(true);
                 userAlert.setDateSent(LocalDate.now());
                 userAlertRepository.save(userAlert);
