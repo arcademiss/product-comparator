@@ -32,6 +32,7 @@ public class Discount {
     private int percentage;
     private String store;
 
+    // transform g to kg and ml to L
     @Transient
     public double getNormalizedQuantity() {
         return switch (packageUnit.toLowerCase()) {
@@ -40,7 +41,7 @@ public class Discount {
         };
     }
 
-    // Derived (not persisted) method for SI unit
+
     @Transient
     public String getNormalizedUnit() {
         return switch (packageUnit.toLowerCase()) {

@@ -10,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
+
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
+
 import java.time.LocalDate;
 import java.util.*;
 
@@ -28,10 +28,10 @@ public class OptimizedShoppingBasketService {
         //  Create discounted items
 
         Map<String, StoreTripDto> storeTripMap = new HashMap<>();
-        DecimalFormat df = new DecimalFormat("#.##");
-        df.setRoundingMode(RoundingMode.CEILING);
+        // loop through the products in the user's basket
         for (BasketItemInputDto item : items) {
 
+            // find products with name "LIKE" the name of the products in the basket
             List<Product> products = productRepository.findByProductNameContainingIgnoreCase(item.getProductName());
 
             if (products.isEmpty()) {
@@ -41,8 +41,12 @@ public class OptimizedShoppingBasketService {
             }
 
             List<DiscountedProductDto> discountedProducts= new ArrayList<>();
+
+            // loop through the products
             for (Product product : products) {
 
+                // find the discount for the product in the given time period(again to simulate the behaviour of
+                // LocalDate.now()) and store
                 DiscountedProductDto discountedProduct = productMapper.productToDiscountedProductDto(product);
                 Discount disc = discountRepository
                     .findByProductIdAndFromDateLessThanEqualAndToDateGreaterThanEqualAndStore(
@@ -53,12 +57,12 @@ public class OptimizedShoppingBasketService {
                     );
 
                 BigDecimal currentPrice = discountedProduct.getProductPrice();
-                // if disc != null first option else second
 
+                // compute the discount in % if it exists, if it doesn't it's 0
                 double discountPercentage = disc != null ? disc.getPercentage()/100.0 : 0;
 
 
-
+                // set the discounted price and add it to the list
 
                 discountedProduct.setDiscountedPrice(
                         currentPrice.subtract(currentPrice.multiply(BigDecimal.valueOf(discountPercentage)))
@@ -69,9 +73,11 @@ public class OptimizedShoppingBasketService {
 
 
             }
+            // sort the list by the discounted price to get the cheapest product
             discountedProducts.sort(Comparator.comparing(DiscountedProductDto::getDiscountedPrice));
             DiscountedProductDto cheapestProduct = discountedProducts.getFirst();
 
+            // create the shopping cart item with the cheapest product
             ShoppingCartItemDto shoppingCartItemDto = ShoppingCartItemDto.builder()
                     .productName(cheapestProduct.getProductName())
                     .quantity(item.getQuantity())
@@ -80,11 +86,12 @@ public class OptimizedShoppingBasketService {
                             .setScale(2, RoundingMode.HALF_UP))
                     .totalPrice(BigDecimal.valueOf(item.getQuantity()).multiply(cheapestProduct.getDiscountedPrice()).setScale(2, RoundingMode.HALF_UP))
                     .build();
-
+            // group the shopping cart items by store names and create the empty list and key if the key doesn't exist
             storeTripMap
                     .computeIfAbsent(cheapestProduct.getStore(), k -> new StoreTripDto())
                     .setStoreName(cheapestProduct.getStore());
 
+            // update the store sub-total and total savings and list of products
             storeTripMap.get(cheapestProduct.getStore())
                     .updateTrip(shoppingCartItemDto, shoppingCartItemDto.getTotalPrice(),
                             cheapestProduct.getProductPrice().subtract(cheapestProduct.getDiscountedPrice()));
@@ -94,7 +101,7 @@ public class OptimizedShoppingBasketService {
         }
 
         OptimizedShoppingBasketOutputDto output = new OptimizedShoppingBasketOutputDto();
-
+        // update the optimized basket with the store trip
         output.updateBasket(storeTripMap);
 
 
@@ -102,8 +109,5 @@ public class OptimizedShoppingBasketService {
         return output;
     }
 
-    private OptimizedShoppingBasketOutputDto optimizeBasket(List<DiscountedProductDto> discountedProducts) {
-        return OptimizedShoppingBasketOutputDto.builder().build();
-    }
 
 }

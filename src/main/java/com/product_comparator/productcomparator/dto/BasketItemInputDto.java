@@ -17,7 +17,7 @@ public class BasketItemInputDto {
     private double quantity;
     private String unit;
 
-
+    // turn grams to kilograms and milliliters to liters
     public double getNormalizedQuantity() {
         return switch (unit.toLowerCase()) {
             case "g", "ml" -> quantity / 1000.0;

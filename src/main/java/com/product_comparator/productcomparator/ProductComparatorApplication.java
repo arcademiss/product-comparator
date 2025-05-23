@@ -23,11 +23,12 @@ public class ProductComparatorApplication {
         SpringApplication.run(ProductComparatorApplication.class, args);
     }
 
+    // run after app is built
     @EventListener(ApplicationReadyEvent.class)
     public void init() throws IOException {
         userAlertService.checkAndSendEmails();
         dataLoader.init();
-        System.out.println("Don1!");
+
     }
 
 }

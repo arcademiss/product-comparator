@@ -24,12 +24,14 @@ public class StoreTripDto {
     BigDecimal savings;
 
     public void updateTrip(ShoppingCartItemDto item, BigDecimal subTotal, BigDecimal savings) {
+        // update the store trip with the items
         this.items.add(item);
         this.subTotal = this.subTotal.add(subTotal).setScale(2, RoundingMode.HALF_UP);
         this.savings = this.savings.add(savings).setScale(2, RoundingMode.HALF_UP);
     }
 
     public StoreTripDto() {
+        // initialize to avoid null pointer exceptions
         this.items = new ArrayList<>();
         this.subTotal = BigDecimal.ZERO;
         this.savings = BigDecimal.ZERO;

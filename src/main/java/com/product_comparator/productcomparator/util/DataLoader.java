@@ -25,11 +25,14 @@ import java.util.Objects;
 
 @Component
 public class DataLoader {
+
+    // inject the path to the csv files from the application.properties
     @Value("${csv.prices.path}")
     private String csvPricesPath;
     @Value("${csv.discounts.path}")
     private String csvDiscountsPath;
 
+    // used to load multiple matching files(like the ones that end in .csv)
     private final ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
     private final ProductRepository productRepository;
@@ -41,12 +44,18 @@ public class DataLoader {
     }
 
 
-    //@PostConstruct
+    // automatic data loading called in main
     public void init() throws IOException {
+
+        // load all csv files
         Resource[] priceResources = resourcePatternResolver.getResources(csvPricesPath);
+
         for(Resource priceResource : priceResources){
+
+            // parse csv file into product entities
             List<Product> products = getProductList(priceResource);
 
+            // add products that don't already exist to the database
             for(Product product : products){
                 if(!productRepository.existsByProductIdAndStoreAndDate(product.getProductId(), product.getStore(),
                         product.getDate())){
@@ -60,8 +69,12 @@ public class DataLoader {
         Resource[] discountResources = resourcePatternResolver.getResources(csvDiscountsPath);
 
         for(Resource discountResource : discountResources){
+
+            // load the discounts from filename (eg "store_discounts.csv" -> "store")
             List<Discount> discounts = loadDiscounts(discountResource.getInputStream(),
                     Objects.requireNonNull(discountResource.getFilename()).split("_")[0]);
+
+            // save discounts that don't already exist
             for(Discount discount : discounts){
                 if (!discountRepository.existsByProductIdAndStoreAndFromDate(
                         discount.getProductId(), discount.getStore(), discount.getFromDate()
@@ -80,14 +93,16 @@ public class DataLoader {
 
     }
 
+    // extracts date from the filename and delegates product loading
     private List<Product> getProductList(Resource priceResource) throws IOException {
+        // Example filename: "store1_2024-11-01.csv" → date = 2024-11-01
         String dateString = Objects.requireNonNull(priceResource.getFilename()).split("_")[1].split("\\.")[0];
         LocalDate localDate = LocalDate.parse(dateString);
         return loadProducts(priceResource.getInputStream(), priceResource.getFilename(), localDate);
     }
 
 
-
+    // parses discount csv files into discount objects
     private List<Discount> loadDiscounts(InputStream filename, String store) throws IOException {
         List<Discount> discounts = new ArrayList<>();
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(filename))){
@@ -135,9 +150,10 @@ public class DataLoader {
                             .productPrice(Double.parseDouble(splitString[6]))
                             .currency(splitString[7])
                             .store(store.split("_")[0].strip())
+                            .date(date)
                             .build();
 
-                    product.setDate(date);
+
 
                     products.add(product);
 

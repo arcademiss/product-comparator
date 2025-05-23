@@ -24,6 +24,7 @@ public class DiscountService {
     private final DiscountRepository discountRepository;
     private final DiscountMapper discountMapper;
     public List<DiscountDtoOutput> getDiscountsInRange(LocalDate startDate, LocalDate endDate) {
+        // get active discounts from range and return a list with all discounts ordered by descending percentage
             List<DiscountDtoOutput> result = new ArrayList<>();
             List<Discount> discounts = discountRepository.findByFromDateLessThanEqualAndToDateGreaterThanEqual(
                     startDate, endDate);

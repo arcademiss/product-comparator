@@ -32,12 +32,14 @@ public class PriceHistoryService {
             String brand
     ) {
 
+        // create a specification based on the available filters. Only the name is required, the rest are ignored if null
         Specification<Product> spec = Specification
                 .where(ProductSpecification.hasName(name))
                 .and(ProductSpecification.hasStore(store))
                 .and(ProductSpecification.hasCategory(category))
                 .and(ProductSpecification.hasBrand(brand));
 
+        // find all products that meet the specification
         List<Product> products = productRepository.findAll(spec);
 
         if (products.isEmpty()) {
@@ -51,8 +53,10 @@ public class PriceHistoryService {
 
 
         List<PriceHistoryPointDto> priceHistoryPointDtos = new ArrayList<>();
-
+        // loop through the products
         for (Product product : products) {
+
+            // get the active discount for the product
             Discount activeDiscount = discountRepository
                     .findByProductIdAndFromDateLessThanEqualAndToDateGreaterThanEqualAndStore(
                             product.getProductId(),
@@ -60,6 +64,8 @@ public class PriceHistoryService {
                             product.getDate(),
                             product.getStore()
                     );
+
+            // create historical price point
              PriceHistoryPointDto point = PriceHistoryPointDto.builder()
                     .productId(product.getProductId())
                     .productName(product.getProductName())
@@ -69,6 +75,7 @@ public class PriceHistoryService {
                     .date( activeDiscount != null ? activeDiscount.getFromDate() : product.getDate())
                     .currency(product.getCurrency())
                     .price(
+                            // compute the price with the discount
                             BigDecimal.valueOf(product.getProductPrice())
                                     .multiply(BigDecimal.ONE.subtract(BigDecimal.valueOf(
                                             activeDiscount != null ? activeDiscount.getPercentage()/100.0 : 0)))
@@ -78,7 +85,7 @@ public class PriceHistoryService {
              priceHistoryPointDtos.add(point);
 
         }
-
+        // return a sorted list by date, to make historical data progress naturally
         return priceHistoryPointDtos.stream().sorted(Comparator.comparing(PriceHistoryPointDto::getDate)).toList();
     }
 }

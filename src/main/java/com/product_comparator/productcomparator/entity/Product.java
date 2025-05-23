@@ -37,7 +37,7 @@ public class Product {
     private List<UserAlert> alerts;
 
 
-
+    // transform g to kg and ml to L
     @Transient
     public double getNormalizedQuantity() {
         return switch (packageUnit.toLowerCase()) {

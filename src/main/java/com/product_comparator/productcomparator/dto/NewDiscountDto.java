@@ -24,6 +24,7 @@ public class NewDiscountDto {
     private double quantity;
     private String unit;
 
+    // turn g to kg and ml to L
     public double getNormalizedQuantity() {
         return switch (unit.toLowerCase()) {
             case "g", "ml" -> quantity / 1000.0;

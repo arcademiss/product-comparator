@@ -21,7 +21,9 @@ public class OptimizedShoppingBasketOutputDto {
     BigDecimal totalCost;
     BigDecimal totalSavings;
 
+
     public void updateBasket(Map<String, StoreTripDto> storeTripMap) {
+        // update the shopping basket with store trip, total saving and total cost
         for (String key : storeTripMap.keySet()) {
             stores.add(storeTripMap.get(key));
             this.totalCost = this.totalCost.add(storeTripMap.get(key).getSubTotal()).setScale(2, RoundingMode.HALF_UP);
@@ -30,6 +32,7 @@ public class OptimizedShoppingBasketOutputDto {
     }
 
     public OptimizedShoppingBasketOutputDto() {
+        // initialize to avoid null pointer exceptions
         this.stores = new ArrayList<>();
         this.totalCost = BigDecimal.ZERO;
         this.totalSavings = BigDecimal.ZERO;

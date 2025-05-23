@@ -26,10 +26,18 @@ public class NewDiscountService {
 
     public List<NewDiscountDto> newDiscounts(LocalDate date) {
         List<NewDiscountDto> newDiscountDtos = new ArrayList<>();
+
+        // get discounts from the given date or a day before. In a real setting date should be LocalDate.now()
+        // but it is a custom date to facilitate testing and demonstration
         List<Discount> discounts = discountRepository.findByFromDateIn(List.of(date, date.minusDays(1)));
+
+        // loop through the discounts
         for (Discount discount : discounts) {
+
+            // custom query to find the products by id and the date closest to the discount
             Optional<Product> p = productRepository.findClosestByProductIdAndDateNative(discount.getProductId(), date);
 
+            // if there is a product that matches get the price and create the New discount dto to add to the list
             if (p.isPresent()) {
                 BigDecimal price = BigDecimal.valueOf(p.get().getProductPrice());
                 NewDiscountDto nD = NewDiscountDto.builder()
@@ -41,7 +49,7 @@ public class NewDiscountService {
                         .quantity(discount.getNormalizedQuantity())
                         .unit(discount.getNormalizedUnit())
                         .oldPrice(price)
-                        .newPrice(price
+                        .newPrice(price // new price is price*(1-discount%)
                                 .multiply(BigDecimal.ONE.subtract(BigDecimal.valueOf(discount.getPercentage() / 100.00)))
                                 .setScale(2, RoundingMode.HALF_UP))
                         .build();

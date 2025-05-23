@@ -15,7 +15,9 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     boolean existsByProductIdAndStoreAndDate(String productId, String store, LocalDate date);
 
+
     List<Product> findByProductNameContainingIgnoreCase(String name);
+    // find products by ID and order by the difference between the date field and target date
     @Query(
             value = "SELECT * FROM product WHERE product_id = :productId " +
                     "ORDER BY ABS((date - CAST(:targetDate AS DATE)))" +
@@ -27,6 +29,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             @Param("targetDate") LocalDate targetDate
     );
 
+    // selects the products with the smallest price from the given date onwards
     @Query("""
     SELECT p
     FROM Product p

@@ -4,6 +4,7 @@ import com.product_comparator.productcomparator.entity.Product;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ProductSpecification {
+    // special filter to let frontend filter historical data on name,store,brand,category
     public static Specification<Product> hasName(String name) {
         return (root, query, cb) -> name == null || name.isBlank()
                 ? null
