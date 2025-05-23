@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"productId", "store", "date"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"Id", "store", "date"})
 )
 public class Product {
 

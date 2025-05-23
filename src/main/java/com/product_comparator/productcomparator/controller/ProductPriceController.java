@@ -63,5 +63,13 @@ public class ProductPriceController {
         return ResponseEntity.ok(bestBuysService.bestBuys(date));
     }
 
+    @PostMapping("/set-alert")
+    public ResponseEntity<String> addAlert(
+            @RequestBody UserAlertInputDto userAlertInput
+
+    ) {
+        return null;
+    }
+
     }
 
