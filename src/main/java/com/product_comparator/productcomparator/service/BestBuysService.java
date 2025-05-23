@@ -5,6 +5,7 @@ import com.product_comparator.productcomparator.entity.Discount;
 import com.product_comparator.productcomparator.entity.Product;
 import com.product_comparator.productcomparator.repository.DiscountRepository;
 import com.product_comparator.productcomparator.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,13 @@ public class BestBuysService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    public BestBuysService(DiscountRepository discountRepository, ProductRepository productRepository) {
+        this.discountRepository = discountRepository;
+        this.productRepository = productRepository;
+    }
+
+
 
     public Map<String,List<BestBuyDto>> bestBuys(LocalDate date) {
         // map with product name as keys and value is a list of bestbuydtos
