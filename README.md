@@ -54,6 +54,9 @@ Base URL: `https://localhost:8080/api`
 
 ### 1. Get all discounts
 **GET** `/api/discounts?startDate=&endDate=`
+#### Parameters:
+- startDate: the beggining of the interval YYYY-MM-DD
+- endDate: the end of the interval YYYY-MM-DD
 
 #### Description:
 Fetches all discounts in the given range.
@@ -92,6 +95,52 @@ curl -X 'GET' \
   }
   ]
 ```
+
+### 2. New discounts
+**GET** `api/new-discounts?date=`
+#### Parameters:
+- date: parameter used for testing, in a real scenario would be replaced by LocalDate.now()
+
+#### Curl example:
+```bash
+curl -X 'GET' \
+  'http://localhost:8080/api/new-discounts?date=2025-05-09' \
+  -H 'accept: */*'
+```
+
+#### Example response:
+
+```json
+[
+  {
+    "storeName": "kaufland",
+    "productName": "lapte zuzu",
+    "discount": 9,
+    "oldPrice": 13,
+    "newPrice": 11.83,
+    "fromDate": "2025-05-08",
+    "toDate": "2025-05-14",
+    "quantity": 1,
+    "unit": "l",
+    "normalizedUnit": "l",
+    "normalizedQuantity": 1
+  },
+  {
+    "storeName": "kaufland",
+    "productName": "ouă mărimea M",
+    "discount": 11,
+    "oldPrice": 13.6,
+    "newPrice": 12.1,
+    "fromDate": "2025-05-08",
+    "toDate": "2025-05-14",
+    "quantity": 10,
+    "unit": "buc",
+    "normalizedUnit": "buc",
+    "normalizedQuantity": 10
+  }
+]
+```
+
 
 
   
