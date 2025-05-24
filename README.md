@@ -34,3 +34,63 @@ mvn clean install
 
 # Run the application
 mvn spring-boot:run
+
+---
+
+```
+
+## Assumptions made or simplifications
+
+- Discounts are assumed to apply per store and within a specific date range
+- No authenticatio/authorization is needed.
+- Because of Google's new TOS for STMP, email alerts are just printed to the console and not actually sent
+- The behaviour of LocalDate.now() is replaced by custom dates in the request to facilitate testing
+- Security was not the main focus of this challenge
+- Implementation tests are not needed
+
+## API Usage
+
+Base URL: `https://localhost:8080/api`
+
+### 1. Get all discounts
+**GET** `/api/discounts?startDate=&endDate=`
+
+#### Description:
+Fetches all discounts in the given range.
+
+#### Curl example:
+```bash
+curl -X 'GET' \
+  'http://localhost:8080/api/discounts?startDate=2025-05-02&endDate=2025-05-02' \
+  -H 'accept: */*'
+```
+
+#### Response example:
+[
+  {
+    "id": 334,
+    "productName": "detergent lichid",
+    "brand": "Ariel",
+    "store": "kaufland",
+    "packageQuantity": 2.5,
+    "packageUnit": "l",
+    "fromDate": "2025-05-01",
+    "toDate": "2025-05-07",
+    "percentage": 22
+  },
+  {
+    "id": 391,
+    "productName": "detergent lichid",
+    "brand": "Dero",
+    "store": "profi",
+    "packageQuantity": 2.5,
+    "packageUnit": "l",
+    "fromDate": "2025-05-01",
+    "toDate": "2025-05-07",
+    "percentage": 20
+  }
+  ]
+
+
+
+  
