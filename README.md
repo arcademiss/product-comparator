@@ -285,8 +285,51 @@ curl -X 'POST' \
 }
 ```
 
+### 4. Price history
 
-  
+**GET** `api/price-history?productName=&store=&category=&brand=`
+
+#### Parameters:
+- productName: the name of the product
+- store: the name of the store(can be null)
+- brand: name of the brand(can be null)
+- category: the category(can be null)
+
+#### Curl example:
+```bash
+curl -X 'GET' \
+  'http://localhost:8080/api/price-history?productName=iaurt%20grecesc&store=lidl&category=&brand=' \
+  -H 'accept: */*'
+```
+
+#### Example response:
+
+```json
+[
+  {
+    "productId": "P002",
+    "productName": "iaurt grecesc",
+    "productCategory": "lactate",
+    "productBrand": "Lidl",
+    "productStore": "lidl",
+    "date": "2025-05-01",
+    "price": 11.5,
+    "currency": "RON"
+  },
+  {
+    "productId": "P002",
+    "productName": "iaurt grecesc",
+    "productCategory": "lactate",
+    "productBrand": "Lidl",
+    "productStore": "lidl",
+    "date": "2025-05-05",
+    "price": 10.32,
+    "currency": "RON"
+  }
+]
+```
+
+
   
 
   
