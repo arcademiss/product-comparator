@@ -329,6 +329,102 @@ curl -X 'GET' \
 ]
 ```
 
+### 5. Best Buys
+**GET** `api/best-buys?date=`
+
+#### Parameters:
+-date: the date used instead of LocalDate.now()
+
+#### Curl example:
+```bash
+curl -X 'GET' \
+  'http://localhost:8080/api/best-buys?date=2025-05-01' \
+  -H 'accept: */*'
+```
+
+#### Example response:
+```json
+{
+  "file somon": [
+    {
+      "productId": "P065",
+      "productName": "file somon",
+      "brand": "Lidl",
+      "unitNorm": "kg",
+      "quantityNorm": 0.2,
+      "price": 25,
+      "pricePerUnit": 125,
+      "store": "lidl"
+    }
+  ],
+  "ouă mărimea M": [
+    {
+      "productId": "P007",
+      "productName": "ouă mărimea M",
+      "brand": "Din Ogradă",
+      "unitNorm": "buc",
+      "quantityNorm": 10,
+      "price": 11.75,
+      "pricePerUnit": 1.18,
+      "store": "profi"
+    },
+    {
+      "productId": "P005",
+      "productName": "ouă mărimea M",
+      "brand": "Lidl",
+      "unitNorm": "buc",
+      "quantityNorm": 10,
+      "price": 12.2,
+      "pricePerUnit": 1.22,
+      "store": "profi"
+    },
+    {
+      "productId": "P006",
+      "productName": "ouă mărimea M",
+      "brand": "Ferma Veche",
+      "unitNorm": "buc",
+      "quantityNorm": 10,
+      "price": 13.5,
+      "pricePerUnit": 1.35,
+      "store": "kaufland"
+    }
+  ],
+  "suc portocale": [
+    {
+      "productId": "P061",
+      "productName": "suc portocale",
+      "brand": "Santorini",
+      "unitNorm": "l",
+      "quantityNorm": 1,
+      "price": 6.92,
+      "pricePerUnit": 6.92,
+      "store": "kaufland"
+    },
+    {
+      "productId": "P060",
+      "productName": "suc portocale",
+      "brand": "Cappy",
+      "unitNorm": "l",
+      "quantityNorm": 1,
+      "price": 7.8,
+      "pricePerUnit": 7.8,
+      "store": "kaufland"
+    }
+  ],
+  "piept pui": [
+    {
+      "productId": "P019",
+      "productName": "piept pui",
+      "brand": "Avicola",
+      "unitNorm": "kg",
+      "quantityNorm": 1,
+      "price": 24.12,
+      "pricePerUnit": 24.12,
+      "store": "profi"
+    }
+}
+```
+
 
   
 
