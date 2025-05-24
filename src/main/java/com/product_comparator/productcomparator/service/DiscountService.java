@@ -6,9 +6,7 @@ import com.product_comparator.productcomparator.exception.discount.DiscountsNotF
 import com.product_comparator.productcomparator.mapper.DiscountMapper;
 import com.product_comparator.productcomparator.repository.DiscountRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,18 +21,19 @@ public class DiscountService {
 
     private final DiscountRepository discountRepository;
     private final DiscountMapper discountMapper;
+
     public List<DiscountDtoOutput> getDiscountsInRange(LocalDate startDate, LocalDate endDate) {
         // get active discounts from range and return a list with all discounts ordered by descending percentage
-            List<DiscountDtoOutput> result = new ArrayList<>();
-            List<Discount> discounts = discountRepository.findByFromDateLessThanEqualAndToDateGreaterThanEqual(
-                    startDate, endDate);
-            for (Discount discount : discounts) {
-                result.add(discountMapper.discountToDiscountDtoOutput(discount));
-            }
+        List<DiscountDtoOutput> result = new ArrayList<>();
+        List<Discount> discounts = discountRepository.findByFromDateLessThanEqualAndToDateGreaterThanEqual(
+                startDate, endDate);
+        for (Discount discount : discounts) {
+            result.add(discountMapper.discountToDiscountDtoOutput(discount));
+        }
 
-            if(result.isEmpty()) {
-              throw new DiscountsNotFoundException("Discounts not found!");
-            }
+        if (result.isEmpty()) {
+            throw new DiscountsNotFoundException("Discounts not found!");
+        }
         result.sort(Comparator.comparing(DiscountDtoOutput::getPercentage).reversed());
 
 

@@ -94,7 +94,8 @@ public class OptimizedShoppingBasketService {
             // update the store sub-total and total savings and list of products
             storeTripMap.get(cheapestProduct.getStore())
                     .updateTrip(shoppingCartItemDto, shoppingCartItemDto.getTotalPrice(),
-                            cheapestProduct.getProductPrice().subtract(cheapestProduct.getDiscountedPrice()));
+                            cheapestProduct.getProductPrice().subtract(cheapestProduct.getDiscountedPrice()
+                                    ).multiply(BigDecimal.valueOf(item.getQuantity())));
 
 
 
