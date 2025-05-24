@@ -99,7 +99,7 @@ curl -X 'GET' \
 ### 2. New discounts
 **GET** `api/new-discounts?date=`
 #### Parameters:
-- date: parameter used for testing, in a real scenario would be replaced by LocalDate.now()
+- date: parameter used for testing, in a real scenario would be replaced by LocalDate.now(); format is YYYY-MM-DD
 
 #### Curl example:
 ```bash
@@ -140,7 +140,153 @@ curl -X 'GET' \
   }
 ]
 ```
+### 3. Optimize shopping baskets
+
+**POST** `api/optimize-basket`
+
+#### Request:
+- items: a list of objects
+- startDate: parameter used for testing, in a real scenario should be replaced by LocalDate.now()
+```json
+  {
+  "items": [
+    {
+      "productName": "lapte",
+      "quantity": 3,
+      "unit": "l",
+      "normalizedUnit": "l",
+      "normalizedQuantity": 1
+    }
+  ],
+  "startDate": "2025-05-24"
+  }
+  ```
+#### CURL example:
+```bash
+curl -X 'POST' \
+  'http://localhost:8080/api/optimize-basket' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "items": [
+    {
+      "productName": "lapte",
+      "quantity": 3,
+      "unit": "string",
+      "normalizedUnit": "string",
+      "normalizedQuantity": 0
+    },
+    {
+      "productName": "detergent",
+      "quantity":5,
+      "unit": "string",
+      "normalizedUnit": "string",
+      "normalizedQuantity": 0
+    },
+    {
+      "productName": "biscu",
+      "quantity": 2,
+      "unit": "string",
+      "normalizedUnit": "string",
+      "normalizedQuantity": 0
+    },
+    {
+      "productName": "iaurt",
+      "quantity": 1,
+      "unit": "string",
+      "normalizedUnit": "string",
+      "normalizedQuantity": 0
+    },
+    {
+      "productName": "cafea",
+      "quantity": 1,
+      "unit": "string",
+      "normalizedUnit": "string",
+      "normalizedQuantity": 0
+    }
+  ],
+  "startDate": "2025-05-14"
+}'
+```
+
+#### Example response:
+```json
+{
+  "stores": [
+    {
+      "storeName": "kaufland",
+      "items": [
+        {
+          "productName": "biscuiți cu unt",
+          "quantity": 2,
+          "unit": "kg",
+          "unitPrice": 6.51,
+          "totalPrice": 13.02,
+          "normalizedUnit": "kg",
+          "normalizedQuantity": 2
+        }
+      ],
+      "subTotal": 13.02,
+      "savings": 1.78
+    },
+    {
+      "storeName": "lidl",
+      "items": [
+        {
+          "productName": "lapte zuzu",
+          "quantity": 3,
+          "unit": "l",
+          "unitPrice": 8.62,
+          "totalPrice": 25.87,
+          "normalizedUnit": "l",
+          "normalizedQuantity": 3
+        },
+        {
+          "productName": "detergent lichid",
+          "quantity": 5,
+          "unit": "l",
+          "unitPrice": 39.6,
+          "totalPrice": 198,
+          "normalizedUnit": "l",
+          "normalizedQuantity": 5
+        },
+        {
+          "productName": "cafea măcinată",
+          "quantity": 1,
+          "unit": "kg",
+          "unitPrice": 19.04,
+          "totalPrice": 19.04,
+          "normalizedUnit": "kg",
+          "normalizedQuantity": 1
+        }
+      ],
+      "subTotal": 242.91,
+      "savings": 56.39
+    },
+    {
+      "storeName": "profi",
+      "items": [
+        {
+          "productName": "iaurt de băut",
+          "quantity": 1,
+          "unit": "kg",
+          "unitPrice": 4.5,
+          "totalPrice": 4.5,
+          "normalizedUnit": "kg",
+          "normalizedQuantity": 1
+        }
+      ],
+      "subTotal": 4.5,
+      "savings": 0.5
+    }
+  ],
+  "totalCost": 260.43,
+  "totalSavings": 58.67
+}
+```
 
 
+  
+  
 
   
