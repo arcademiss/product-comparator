@@ -66,6 +66,7 @@ curl -X 'GET' \
 ```
 
 #### Response example:
+```json
 [
   {
     "id": 334,
@@ -90,7 +91,7 @@ curl -X 'GET' \
     "percentage": 20
   }
   ]
-
+```
 
 
   
