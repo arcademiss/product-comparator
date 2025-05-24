@@ -425,7 +425,19 @@ curl -X 'GET' \
 }
 ```
 
+### 6. User Alert
+**POST** `api/set-alert`
 
+#### Request Body:
+```json
+{
+  "userEmail": "string",
+  "productName": "string",
+  "productBrand": "string",
+  "productStore": "string",
+  "priceSetpoint": 0
+}
+```
   
 
   
