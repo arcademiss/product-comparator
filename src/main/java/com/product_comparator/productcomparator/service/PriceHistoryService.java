@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -57,32 +58,73 @@ public class PriceHistoryService {
         for (Product product : products) {
 
             // get the active discount for the product
-            Discount activeDiscount = discountRepository
-                    .findByProductIdAndFromDateLessThanEqualAndToDateGreaterThanEqualAndStore(
-                            product.getProductId(),
-                            product.getDate(),
-                            product.getDate(),
-                            product.getStore()
-                    );
+            List<Discount> discounts = discountRepository
+                    .findByProductIdAndStoreOrderByFromDateAsc(product.getProductId(), product.getStore());
 
-            // create historical price point
-             PriceHistoryPointDto point = PriceHistoryPointDto.builder()
-                    .productId(product.getProductId())
-                    .productName(product.getProductName())
-                    .productCategory(product.getProductCategory())
-                    .productBrand(product.getProductBrand())
-                    .productStore(product.getStore())
-                    .date( activeDiscount != null ? activeDiscount.getFromDate() : product.getDate())
-                    .currency(product.getCurrency())
-                    .price(
-                            // compute the price with the discount
-                            BigDecimal.valueOf(product.getProductPrice())
-                                    .multiply(BigDecimal.ONE.subtract(BigDecimal.valueOf(
-                                            activeDiscount != null ? activeDiscount.getPercentage()/100.0 : 0)))
-                                    .setScale(2, RoundingMode.HALF_UP)
-                    )
-                    .build();
-             priceHistoryPointDtos.add(point);
+            LocalDate productStartDate = product.getDate(); // earliest known date for the product
+            LocalDate previousEndDate = productStartDate;
+
+            for (Discount discount : discounts) {
+                // Fill in gap before this discount, if any
+                if (discount.getFromDate().isAfter(previousEndDate)) {
+                    // Add a point for the start of the gap
+                    priceHistoryPointDtos.add(PriceHistoryPointDto.builder()
+                            .productId(product.getProductId())
+                            .productName(product.getProductName())
+                            .productCategory(product.getProductCategory())
+                            .productBrand(product.getProductBrand())
+                            .productStore(product.getStore())
+                            .date(previousEndDate)
+                            .currency(product.getCurrency())
+                            .price(
+                                    BigDecimal.valueOf(product.getProductPrice())
+                                            .setScale(2, RoundingMode.HALF_UP)
+                            )
+                            .build());
+                }
+
+                // Add the discounted point
+                priceHistoryPointDtos.add(PriceHistoryPointDto.builder()
+                        .productId(product.getProductId())
+                        .productName(product.getProductName())
+                        .productCategory(product.getProductCategory())
+                        .productBrand(product.getProductBrand())
+                        .productStore(product.getStore())
+                        .date(discount.getFromDate())
+                        .currency(product.getCurrency())
+                        .price(
+                                BigDecimal.valueOf(product.getProductPrice())
+                                        .multiply(BigDecimal.ONE.subtract(BigDecimal.valueOf(discount.getPercentage() / 100.0)))
+                                        .setScale(2, RoundingMode.HALF_UP)
+                        )
+                        .build());
+
+                // Move the previousEndDate to the day after this discount ends
+                previousEndDate = discount.getToDate().plusDays(1);
+            }
+
+// Optionally, add one final full-price point after the last discount
+            if (previousEndDate.isBefore(LocalDate.now())) {
+                priceHistoryPointDtos.add(PriceHistoryPointDto.builder()
+                        .productId(product.getProductId())
+                        .productName(product.getProductName())
+                        .productCategory(product.getProductCategory())
+                        .productBrand(product.getProductBrand())
+                        .productStore(product.getStore())
+                        .date(previousEndDate)
+                        .currency(product.getCurrency())
+                        .price(
+                                BigDecimal.valueOf(product.getProductPrice())
+                                        .setScale(2, RoundingMode.HALF_UP)
+                        )
+                        .build());
+            }
+
+
+
+
+
+
 
         }
         // return a sorted list by date, to make historical data progress naturally
