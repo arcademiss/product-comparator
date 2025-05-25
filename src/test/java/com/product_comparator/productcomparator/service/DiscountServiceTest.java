@@ -7,6 +7,8 @@ import com.product_comparator.productcomparator.mapper.DiscountMapper;
 import com.product_comparator.productcomparator.repository.DiscountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -17,17 +19,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 class DiscountServiceTest {
 
+    @InjectMocks
     private DiscountService discountService;
+    @Mock
     private DiscountRepository discountRepository;
+    @Mock
     private DiscountMapper discountMapper;
 
-    @BeforeEach
-    void setUp() {
-        discountRepository = mock(DiscountRepository.class);
-        discountMapper = mock(DiscountMapper.class);
-        discountService = new DiscountService(discountRepository, discountMapper);
 
-    }
 
     @Test
     void getDiscountsInRange_returnSortedDiscounts() {

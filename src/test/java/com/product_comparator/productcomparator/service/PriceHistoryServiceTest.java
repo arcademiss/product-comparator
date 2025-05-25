@@ -8,6 +8,8 @@ import com.product_comparator.productcomparator.repository.DiscountRepository;
 import com.product_comparator.productcomparator.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
@@ -20,16 +22,14 @@ import static org.mockito.Mockito.*;
 
 class PriceHistoryServiceTest {
 
+    @Mock
     private ProductRepository productRepository;
+    @Mock
     private DiscountRepository discountRepository;
+    @InjectMocks
     private PriceHistoryService priceHistoryService;
 
-    @BeforeEach
-    void setUp() {
-        productRepository = mock(ProductRepository.class);
-        discountRepository = mock(DiscountRepository.class);
-        priceHistoryService = new PriceHistoryService(productRepository, discountRepository);
-    }
+
 
     @Test
     void testGetHistory_WithDiscount_AppliesDiscountCorrectly() {

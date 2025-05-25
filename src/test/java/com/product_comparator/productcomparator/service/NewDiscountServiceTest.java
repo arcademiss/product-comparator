@@ -8,6 +8,8 @@ import com.product_comparator.productcomparator.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -20,16 +22,14 @@ import static org.mockito.Mockito.*;
 
 class NewDiscountServiceTest {
 
+    @Mock
     private ProductRepository productRepository;
+    @Mock
     private DiscountRepository discountRepository;
+    @InjectMocks
     private NewDiscountService newDiscountService;
 
-    @BeforeEach
-    void setUp() {
-        productRepository = mock(ProductRepository.class);
-        discountRepository = mock(DiscountRepository.class);
-        newDiscountService = new NewDiscountService(productRepository, discountRepository);
-    }
+
 
     @Test
     void testNewDiscounts_WithMatchingProduct_ReturnsDtoList() {

@@ -7,7 +7,11 @@ import com.product_comparator.productcomparator.repository.DiscountRepository;
 import com.product_comparator.productcomparator.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,19 +21,15 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class BestBuysServiceTest {
 
+    @Mock
     private DiscountRepository discountRepository;
+    @Mock
     private ProductRepository productRepository;
+    @InjectMocks
     private BestBuysService bestBuysService;
-
-    @BeforeEach
-    void setUp() {
-        discountRepository = Mockito.mock(DiscountRepository.class);
-        productRepository = Mockito.mock(ProductRepository.class);
-        bestBuysService = new BestBuysService(discountRepository, productRepository);
-
-    }
 
     @Test
     void bestBuys_withDiscount() {

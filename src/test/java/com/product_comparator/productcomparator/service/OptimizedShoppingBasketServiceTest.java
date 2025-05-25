@@ -8,6 +8,8 @@ import com.product_comparator.productcomparator.repository.DiscountRepository;
 import com.product_comparator.productcomparator.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -19,18 +21,16 @@ import static org.mockito.Mockito.*;
 
 class OptimizedShoppingBasketServiceTest {
 
+    @Mock
     private ProductRepository productRepository;
+    @Mock
     private DiscountRepository discountRepository;
+    @Mock
     private ProductMapper productMapper;
+    @InjectMocks
     private OptimizedShoppingBasketService service;
 
-    @BeforeEach
-    void setUp() {
-        productRepository = mock(ProductRepository.class);
-        discountRepository = mock(DiscountRepository.class);
-        productMapper = mock(ProductMapper.class);
-        service = new OptimizedShoppingBasketService(productRepository, discountRepository, productMapper);
-    }
+
 
     @Test
     void testGetOptimizedBasket_ReturnsCorrectOutput() {
