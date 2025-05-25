@@ -75,6 +75,7 @@ public class OptimizedShoppingBasketService {
             }
             // sort the list by the discounted price to get the cheapest product
             discountedProducts.sort(Comparator.comparing(DiscountedProductDto::getDiscountedPrice));
+            if(discountedProducts.isEmpty()){continue;}
             DiscountedProductDto cheapestProduct = discountedProducts.getFirst();
 
             // create the shopping cart item with the cheapest product

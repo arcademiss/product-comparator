@@ -27,13 +27,14 @@ public class DiscountService {
         List<DiscountDtoOutput> result = new ArrayList<>();
         List<Discount> discounts = discountRepository.findByFromDateLessThanEqualAndToDateGreaterThanEqual(
                 startDate, endDate);
+        if (discounts.isEmpty()) {
+            throw new DiscountsNotFoundException("Discounts not found!");
+        }
         for (Discount discount : discounts) {
             result.add(discountMapper.discountToDiscountDtoOutput(discount));
         }
 
-        if (result.isEmpty()) {
-            throw new DiscountsNotFoundException("Discounts not found!");
-        }
+
         result.sort(Comparator.comparing(DiscountDtoOutput::getPercentage).reversed());
 
 

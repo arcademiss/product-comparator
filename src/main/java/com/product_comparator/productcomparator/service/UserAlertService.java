@@ -8,39 +8,33 @@ import com.product_comparator.productcomparator.repository.DiscountRepository;
 import com.product_comparator.productcomparator.repository.ProductRepository;
 import com.product_comparator.productcomparator.repository.UserAlertRepository;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserAlertService {
-    @Autowired
-    ProductRepository productRepository;
-    @Autowired
-    UserAlertRepository userAlertRepository;
-    @Autowired
-    DiscountRepository  discountRepository;
 
+    private final ProductRepository productRepository;
+    private final UserAlertRepository userAlertRepository;
+    private final DiscountRepository discountRepository;
 
-    public String addUserAlert(
-            String userEmail,
-            String productName,
-            String productBrand,
-            String productStore,
-            BigDecimal priceSetpoint
-    ) {
-        // find the product which matches the user alert
+    private static final Logger logger = LoggerFactory.getLogger(UserAlertService.class);
+
+    public String addUserAlert(String userEmail, String productName, String productBrand, String productStore, BigDecimal priceSetpoint) {
         Product product = productRepository.findTop1ByProductNameAndProductBrandAndStore(productName, productBrand, productStore);
         if (product == null) {
             throw new ProductNotFoundException("Product not found");
         }
-        // create the user alert for the product
+
         UserAlert alert = UserAlert.builder()
                 .userEmail(userEmail)
                 .product(product)
@@ -48,48 +42,44 @@ public class UserAlertService {
                 .sent(false)
                 .priceSetpoint(priceSetpoint)
                 .build();
+
         userAlertRepository.save(alert);
         return "success";
     }
 
     @Transactional
-    // run this function every day at 9 am
     @Scheduled(cron = "0 0 9 * * *")
     public void checkAndSendEmails() {
-        // find all unsent alerts
         List<UserAlert> userAlerts = userAlertRepository.findBySent(false);
+        LocalDate today = LocalDate.now();
 
-        // loop through unsent alerts
         for (UserAlert userAlert : userAlerts) {
-            // get the product associated with the alert
             Product product = userAlert.getProduct();
 
-            // find the discount for the product
-            Discount discount= discountRepository
+            Discount discount = discountRepository
                     .findTop1ByProductIdAndFromDateLessThanEqualAndToDateGreaterThanEqualAndStore(
-                            product.getProductId(),
-                            LocalDate.now(),
-                            LocalDate.now(),
-                            product.getStore()
+                            product.getProductId(), today, today, product.getStore()
                     );
 
-            // compute the new price if it has a discount and keep the old price if not
-            BigDecimal price = discount != null
-                    ? BigDecimal.valueOf(product.getProductPrice())
-                    .multiply(BigDecimal.ONE.subtract(BigDecimal.valueOf(discount.getPercentage()/100.00)))
-                    : BigDecimal.valueOf(product.getProductPrice());
+            BigDecimal effectivePrice = getEffectivePrice(product, discount);
 
-            // check if price point is met or lower
-            if(price.compareTo(userAlert.getPriceSetpoint()) < 0 || price.compareTo(userAlert.getPriceSetpoint()) == 0) {
+            if (effectivePrice.compareTo(userAlert.getPriceSetpoint()) <= 0) {
+                logger.info("Email sent to: {}", userAlert.getUserEmail());
 
-                // logic to send the email to the user with the alert
-                System.out.println("Email sent to: " + userAlert.getUserEmail());
-
-                // set the flag for sent true and set the date of the sending and update the database
                 userAlert.setSent(true);
-                userAlert.setDateSent(LocalDate.now());
+                userAlert.setDateSent(today);
                 userAlertRepository.save(userAlert);
             }
         }
+    }
+
+    private BigDecimal getEffectivePrice(Product product, Discount discount) {
+        BigDecimal basePrice = BigDecimal.valueOf(product.getProductPrice());
+        if (discount == null) return basePrice;
+
+        BigDecimal discountFactor = BigDecimal.valueOf(discount.getPercentage())
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+
+        return basePrice.multiply(BigDecimal.ONE.subtract(discountFactor));
     }
 }

@@ -41,7 +41,7 @@ public class NewDiscountService {
             // if there is a product that matches get the price and create the New discount dto to add to the list
             if (p.isPresent()) {
                 BigDecimal price = BigDecimal.valueOf(p.get().getProductPrice());
-                NewDiscountDto nD = NewDiscountDto.builder()
+                NewDiscountDto dto = NewDiscountDto.builder()
                         .productName(discount.getProductName())
                         .storeName(discount.getStore())
                         .discount(discount.getPercentage())
@@ -55,7 +55,7 @@ public class NewDiscountService {
                                 .setScale(2, RoundingMode.HALF_UP))
                         .build();
 
-                newDiscountDtos.add(nD);
+                newDiscountDtos.add(dto);
             }
 
 
