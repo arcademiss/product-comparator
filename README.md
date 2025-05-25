@@ -46,7 +46,7 @@ mvn spring-boot:run
 - Because of Google's new TOS for STMP, email alerts are just printed to the console and not actually sent
 - The behaviour of LocalDate.now() is replaced by custom dates in the request to facilitate testing
 - Security was not the main focus of this challenge
-- Implementation tests are not needed
+- Integration tests are not needed
 
 ## API Usage
 
